@@ -10,11 +10,13 @@ datasource db {
 model Teacher {
   id   String @id @unique @default(uuid())
   name String
+  cpf  String @unique
 }
 
 model Student {
   id           String            @id @unique @default(uuid())
   name         String
+  cpf          String            @unique
   supportLevel SupportLevelTypes
 }
 
