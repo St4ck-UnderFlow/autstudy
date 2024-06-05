@@ -1,5 +1,6 @@
 import fastify from "fastify";
 import cors from "@fastify/cors";
+import { StudentController } from "./modules/students/students.controller";
 
 export const app = fastify();
 
@@ -9,9 +10,7 @@ app.register(cors, {
 
 const PORT = 3333;
 
-app.get('/', () => {
-    return 'Hello, World!'
-})
+StudentController(app);
 
 app.listen({
     port: PORT

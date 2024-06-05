@@ -1,4 +1,4 @@
-import { Prisma, Student } from "@prisma/client";
+import { Student } from "@prisma/client";
 import { Service } from "../../interfaces/Service.interface";
 import { prisma } from "../../../prisma/prisma";
 
@@ -10,28 +10,62 @@ export class StudentService implements Service {
                 cpf: student.cpf
             }
         })
-
         if (alreadySaved) {
             throw new Error('Student Already Saved');
         }
-
-        await prisma.student.create({data: { ...student }});
+        return await prisma.student.create({
+            data: student,
+        });
     };
 
-    getAll(): void {
-        
+    async getAll() {
+        const students = await prisma.student.findMany();
+        if (!students) {
+            throw new Error('No students found');
+        }
+        return students;
     };
 
-    getById(): void {
-
+    async getById(id: string) {
+        const student = await prisma.student.findUnique({
+            where: {
+                id
+            }
+        })
+        if (!student) {
+            throw new Error('Student not found')
+        }
+        return student;
     };
 
-    delete(): void {
+    async delete(id: string) {
+        const hasStudentSaved = await prisma.student.findUnique({
+            where: { id }
+        })
+        if (!hasStudentSaved) {
+            throw new Error('Student not found')
+        }
 
+        await prisma.student.delete({
+            where: { id }
+        })
     };
 
-    update(): void {
-
+    async update(student: Student) {
+        const hasStudentSaved = await prisma.student.findUnique({
+            where: { id: student.id }
+        })
+        if (!hasStudentSaved) {
+            throw new Error('Student not found')
+        }
+        await prisma.student.update({
+            where: { id: student.id }, 
+            data: {
+                name: student.name,
+                cpf: student.cpf,
+                supportLevel: student.supportLevel
+            },
+        })
     };
 
 }
