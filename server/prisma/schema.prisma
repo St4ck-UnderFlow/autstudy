@@ -14,19 +14,13 @@ model Teacher {
 }
 
 model Student {
-  id           String            @id @unique @default(uuid())
+  id           String @id @unique @default(uuid())
   name         String
-  cpf          String            @unique
-  supportLevel SupportLevelTypes
+  cpf          String @unique
+  supportLevel String
 }
 
 model Room {
   id    String @id @unique @default(uuid())
   title String
-}
-
-enum SupportLevelTypes {
-  SLIGHT
-  MODERATE
-  SEVERE
 }
