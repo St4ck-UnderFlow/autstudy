@@ -1,8 +1,8 @@
 import { Student } from "@prisma/client";
-import { Service } from "../../interfaces/Service.interface";
-import { prisma } from "../../../prisma/prisma";
+import { GlobalServiceInterface } from "../interfaces/GlobalService.interface";
+import { prisma } from "../../prisma/prisma";
 
-export class StudentService implements Service { 
+export class StudentService implements GlobalServiceInterface { 
 
     async save(student: Student) {
         const alreadySaved = await prisma.student.findUnique({

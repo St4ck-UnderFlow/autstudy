@@ -1,6 +1,6 @@
 import fastify from "fastify";
 import cors from "@fastify/cors";
-import { StudentController } from "./modules/students/students.controller";
+import { StudentController } from "./controller/students.controller";
 
 export const app = fastify();
 
