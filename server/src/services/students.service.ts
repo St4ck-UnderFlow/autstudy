@@ -7,7 +7,7 @@ export class StudentService implements GlobalServiceInterface {
     async save(student: Student) {
         const alreadySaved = await prisma.student.findUnique({
             where: {
-                cpf: student.cpf
+                cpf: student
             }
         })
         if (alreadySaved) {

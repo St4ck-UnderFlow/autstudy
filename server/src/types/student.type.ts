@@ -1,5 +1,5 @@
 export type Student = {
-    name: string;
+    id?: string;
     supportLevel: string;
-    cpf: string;
+    user: any
 }

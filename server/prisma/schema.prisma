@@ -46,8 +46,8 @@ model Room {
 model Role {
   id        String   @id @unique @default(uuid())
   name      String
-  userId    String?
+  userType  String[]
   createdAt DateTime @default(now())
 
-  User User? @relation(fields: [userId], references: [id])
+  users User[]
 }
