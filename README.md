@@ -44,3 +44,37 @@ A study platform for autism students social interaction improvement
 
 > ✅ = allowed
 > ❌ = not allowed
+
+### Running Guide (Developlement Environment)
+
+#### 🐋 Docker Container (PostgreSQL)
+```
+cd server
+docker compose up -d
+```
+
+#### 🗄️ Server (NodeJs API)
+```
+cd server
+npm install 
+npm run dev
+```
+##### Open Prisma Studio
+GUI to view and edit data in database
+```
+cd server
+npm run studio
+```
+
+##### Prisma Migration
+```
+cd server
+npm run migrate
+```
+
+#### 📱 Mobile (React Native)
+```
+cd mobile
+npm install 
+npm run start
+```
