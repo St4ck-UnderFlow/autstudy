@@ -1,3 +1,5 @@
+import "dotenv/config";
+
 import fastify from "fastify";
 import cors from "@fastify/cors";
 import jwt from "@fastify/jwt";
@@ -11,8 +13,10 @@ app.register(cors, {
     origin: true
 })
 
-app.register(jwt, {
-    secret: 'lahuvdoasdhubv8yg120y78b23hifbw8yf',
+const JWT_SECRET = process.env.JWT_SECRET;
+
+JWT_SECRET && app.register(jwt, {
+    secret: JWT_SECRET,
 })
 
 const PORT = 3333;

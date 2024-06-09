@@ -19,7 +19,7 @@ export function AuthController(app: FastifyInstance) {
                 });
                 reply.status(200).send({ token });
             } catch (error) {
-                reply.send(403).send(error);
+                reply.status(403).send(error);
             }
         }
     )
