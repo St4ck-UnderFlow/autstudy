@@ -1,25 +1,27 @@
-import { Student } from "@prisma/client";
-import { GlobalServiceInterface } from "../interfaces/GlobalService.interface";
 import { prisma } from "../../prisma/prisma";
+import { Student } from "../types/student.type";
+import { UserService } from "./user.service";
 
-export class StudentService implements GlobalServiceInterface { 
+const userService = new UserService();
+
+export class StudentService { 
 
     async save(student: Student) {
-        const alreadySaved = await prisma.student.findUnique({
-            where: {
-                cpf: student
+        const newUser = await userService.save(student.user);
+        await prisma.student.create({
+            data: {
+                userId: newUser.id,
+                supportLevel: student.supportLevel
             }
-        })
-        if (alreadySaved) {
-            throw new Error('Student Already Saved');
-        }
-        return await prisma.student.create({
-            data: student,
         });
     };
 
     async getAll() {
-        const students = await prisma.student.findMany();
+        const students = await prisma.student.findMany({
+            include: {
+                user: true,
+            }
+        });
         if (!students) {
             throw new Error('No students found');
         }
@@ -30,6 +32,9 @@ export class StudentService implements GlobalServiceInterface {
         const student = await prisma.student.findUnique({
             where: {
                 id
+            },
+            include: {
+                user: true
             }
         })
         if (!student) {
@@ -52,20 +57,17 @@ export class StudentService implements GlobalServiceInterface {
     };
 
     async update(student: Student) {
-        const hasStudentSaved = await prisma.student.findUnique({
-            where: { id: student.id }
-        })
-        if (!hasStudentSaved) {
-            throw new Error('Student not found')
-        }
-        await prisma.student.update({
-            where: { id: student.id }, 
+        const userUpdated = await userService.update(student.user);
+        const studentUpdated = await prisma.student.update({
+            where: { 
+                id: student.id,
+                userId: userUpdated.id 
+            }, 
             data: {
-                name: student.name,
-                cpf: student.cpf,
                 supportLevel: student.supportLevel
             },
-        })
+        });
+        return studentUpdated;
     };
 
 }

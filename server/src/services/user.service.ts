@@ -1,9 +1,13 @@
 import { prisma } from "../../prisma/prisma";
 import { HashService } from "../security/hash.service";
-import { Role } from "../types/role.type";
+import { JwtService } from "../security/jwt.service";
+import { app } from "../server";
 import { User } from "../types/user.type";
+import { RoleService } from "./role.service";
 
 const hashService = new HashService();
+const roleService = new RoleService();
+const jwtService = new JwtService();
 
 export class UserService {
 
@@ -15,40 +19,44 @@ export class UserService {
         })
 
         if (!user) {
-            throw new Error("User not found");
+            throw new Error("Invalid credentials");
         }
 
-        // TODO: ...
+        const token = await jwtService.generateToken(user);
+        return token;
     }
 
-    async register(data: User) {
-        const userAlreadyExists = await prisma.user.findUnique({
+    async save(user: User) {
+        const emailAlreadyInUse = await prisma.user.findUnique({
             where: {
-                email: data.email
-            }
-        })
-
-        if (userAlreadyExists) {
-            throw new Error("User already exists");
-        }
-
-        const hashedPassword = hashService.hashPassword(data.password);
-
-        const userRoles = await prisma.role.findMany({
-            where: {
-                userType: {
-                    has: data.userType
-                },
+                email: user.email,
             }
         });
 
+        if (emailAlreadyInUse) {
+            throw new Error("Email already in use");
+        }
+
+        const cpfAlreadyInUse = await prisma.user.findUnique({
+            where: {
+                cpf: user.cpf
+            }
+        });
+
+        if (cpfAlreadyInUse) {
+            throw new Error("CPF already in use");
+        }
+
+        const hashedPassword = hashService.hashPassword(user.password);
+        const userRoles = await roleService.getUserRoles(user.userType);
+
         const newUser = await prisma.user.create({
             data: {
-                name: data.name,
-                cpf: data.cpf,
-                email: data.email,
+                name: user.name,
+                cpf: user.cpf,
+                email: user.email,
                 password: hashedPassword,
-                userType: data.userType,
+                userType: user.userType,
                 roles: {
                     connect: userRoles.map(role => ({ id: role.id }))
                 }
@@ -56,6 +64,32 @@ export class UserService {
         });
 
         return newUser;
+    }
+
+    async getUserByEmail(email: string) {
+        return prisma.user.findUnique({
+            where: {
+                email
+            }
+        })
+    }
+
+    async update(user: User) {
+        const hasUserSaved = await prisma.user.findUnique({
+            where: { id: user.id }
+        });
+        if (!hasUserSaved) {
+            throw new Error('Student not found')
+        };
+        const userUpdated = await prisma.user.update({
+            where: { id: user.id }, 
+            data: {
+                name: user.name,
+                cpf: user.cpf,
+                email: user.email
+            }
+        });
+        return userUpdated;
     }
 
 }

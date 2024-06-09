@@ -46,7 +46,7 @@ model Room {
 model Role {
   id        String   @id @unique @default(uuid())
   name      String
-  userType  String[]
+  userTypes  String[]
   createdAt DateTime @default(now())
 
   users User[]

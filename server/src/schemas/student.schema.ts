@@ -1,9 +1,8 @@
 import { z } from "zod";
 
 export const createStudentSchema = z.object({
-    name: z.string(),
-    cpf: z.string(),
-    supportLevel: z.string()
+    supportLevel: z.string(),
+    user: z.any()
 });
 
 export const getStudentByIdSchema = z.object({

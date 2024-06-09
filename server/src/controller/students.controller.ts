@@ -1,12 +1,11 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { z } from 'zod';
-import { GlobalServiceInterface } from "../interfaces/GlobalService.interface";
 import { StudentService } from "../services/students.service";
 import { createStudentSchema, getStudentByIdSchema } from "../schemas/student.schema";
 import { validatePayload } from "../middlewares/payloadValidation.middleware";
-import { Student } from "@prisma/client";
+import { Student } from "../types/student.type";
 
-const service: GlobalServiceInterface = new StudentService();
+const studentService = new StudentService();
 
 export function StudentController(app: FastifyInstance) {
 
@@ -15,7 +14,7 @@ export function StudentController(app: FastifyInstance) {
         { preHandler: validatePayload(createStudentSchema, "body") },
         async (request: FastifyRequest, reply: FastifyReply) => {
             try {
-                await service.save(request.body);
+                await studentService.save(request.body as Student);
                 reply.status(201).send(request.body);
             } catch (error) {
                 reply.status(500).send(error);
@@ -25,7 +24,7 @@ export function StudentController(app: FastifyInstance) {
 
     app.get('/students', async (request: FastifyRequest, reply: FastifyReply) => {
         try {
-            const students = await service.getAll();
+            const students = await studentService.getAll();
             return await reply.send(students);
         } catch (error) {
             reply.status(404).send(error);
@@ -37,7 +36,7 @@ export function StudentController(app: FastifyInstance) {
         { preHandler: validatePayload(getStudentByIdSchema, "body") },
         async (request: FastifyRequest, reply: FastifyReply) => {
             try {
-                const student = await service.getById(request.params as string);
+                const student = await studentService.getById(request.params as string);
                 return reply.send(student);
             } catch (error) {
                 reply.status(404).send(error);
@@ -56,8 +55,8 @@ export function StudentController(app: FastifyInstance) {
         async (request: FastifyRequest, reply: FastifyReply) => {
             try {
                 const id = (request.params as { id: string }).id;
-                const { name, cpf, supportLevel } = request.body as Student;
-                await service.update({ id, name, cpf, supportLevel });
+                const { supportLevel, user } = request.body as Student;
+                await studentService.update({ id, supportLevel, user });
                 reply.status(204).send();
             } catch (error) {
                 reply.status(404).send(error);
@@ -73,7 +72,7 @@ export function StudentController(app: FastifyInstance) {
     
             const { id } = paramsSchema.parse(request.params);
 
-            await service.delete(id);
+            await studentService.delete(id);
 
             reply.status(204).send();
 
