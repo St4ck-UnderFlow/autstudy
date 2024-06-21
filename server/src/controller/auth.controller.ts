@@ -1,7 +1,7 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { UserService } from "../services/user.service";
-import { validatePayload } from "../middlewares/payloadValidation.middleware";
-import { authSchema } from "../schemas/auth.schema";
+import { validatePayload } from "../security/middlewares/payloadValidation.middleware";
+import { authSchema } from "../security/schemas/auth.schema";
 
 const service = new UserService();
 

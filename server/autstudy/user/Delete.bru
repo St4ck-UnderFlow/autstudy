@@ -1,18 +1,22 @@
 meta {
-  name: Create
+  name: Delete
   type: http
-  seq: 1
+  seq: 5
 }
 
-post {
+delete {
   url: http://localhost:3333/students
   body: json
   auth: none
 }
 
+query {
+  id: 
+}
+
 body:json {
   {
-    "cpf": "098.098.098-90",
+    "cpf": "098.098.098-76",
     "name": "Vinicius",
     "supportLevel": "MODERATE"
   }

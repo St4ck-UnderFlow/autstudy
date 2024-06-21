@@ -1,0 +1,24 @@
+meta {
+  name: Create
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:3333/students
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "supportLevel": "MODERATE",
+    "user":{
+      "name": "Vinicius",
+      "cpf": "098.098.098-90",
+      "email": "nicius@nicius.com",
+      "password": "senhadocnicius12",
+      "userType": "STUDENT"
+    }
+  }
+}
