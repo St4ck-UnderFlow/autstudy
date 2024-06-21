@@ -1,8 +1,8 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { z } from 'zod';
 import { StudentService } from "../services/students.service";
-import { createStudentSchema, getStudentByIdSchema } from "../schemas/student.schema";
-import { validatePayload } from "../middlewares/payloadValidation.middleware";
+import { createStudentSchema, getStudentByIdSchema } from "../security/schemas/student.schema";
+import { validatePayload } from "../security/middlewares/payloadValidation.middleware";
 import { Student } from "../types/student.type";
 
 const studentService = new StudentService();

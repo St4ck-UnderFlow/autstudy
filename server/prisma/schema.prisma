@@ -14,7 +14,7 @@ model User {
   cpf       String   @unique
   email     String   @unique
   password  String
-  userType  String
+  userType  UserType
   roles     Role[]
 
   Teacher Teacher?
@@ -22,17 +22,17 @@ model User {
 }
 
 model Teacher {
-  id          String @id @unique @default(uuid())
-  userId      String @unique
-  degreeLevel String
+  id          String       @id @unique @default(uuid())
+  userId      String       @unique
+  degreeLevel DeggreeLevel
 
   user User @relation(fields: [userId], references: [id])
 }
 
 model Student {
-  id           String @id @unique @default(uuid())
-  userId       String @unique
-  supportLevel String
+  id           String       @id @unique @default(uuid())
+  userId       String       @unique
+  supportLevel SupportLevel
 
   user User @relation(fields: [userId], references: [id])
 }
@@ -46,8 +46,27 @@ model Room {
 model Role {
   id        String   @id @unique @default(uuid())
   name      String
-  userTypes  String[]
+  userTypes UserType
   createdAt DateTime @default(now())
 
   users User[]
+}
+
+enum DeggreeLevel {
+  ASSOCIATE
+  BACHELORS
+  MASTERS
+  GRADUATE
+  PROFESSIONAL
+}
+
+enum SupportLevel {
+  SLIGHT
+  MODERATE
+  SEVERE
+}
+
+enum UserType {
+  TEACHER
+  STUDENT
 }

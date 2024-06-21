@@ -1,4 +1,5 @@
 import { Role } from "@prisma/client";
+import { UserType } from "./enums.enum";
 
 export type User = {
     id?: string;
@@ -7,6 +8,6 @@ export type User = {
     cpf: string;
     email: string;
     password: string;
-    userType: string;
+    userType: UserType;
     roles?: Role[];
 };

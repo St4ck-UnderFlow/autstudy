@@ -1,0 +1,22 @@
+meta {
+  name: Update
+  type: http
+  seq: 4
+}
+
+put {
+  url: http://localhost:3333/students
+  body: json
+  auth: none
+}
+
+query {
+  id: 
+}
+
+body:json {
+  {
+    "name": "Miguelito",
+    "supportLevel": "SEVERE"
+  }
+}
