@@ -18,7 +18,11 @@ export class UserService {
             }
         })
 
-        if (!user) {
+        const userPassword = user?.password || '';
+
+        const invalidCreadentials = !user || !hashService.comparePassword(params.password, userPassword);
+
+        if (invalidCreadentials) {
             throw new Error("Invalid credentials");
         }
 

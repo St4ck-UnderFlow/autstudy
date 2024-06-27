@@ -1,13 +1,23 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { useAuth } from '../hooks/useAuth';
 
 export function SignIn() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  function handleLogin() {
-    console.log({email, password})
+  const { auth } = useAuth();
+
+  const [errorMessage, setErrorMessage] = useState('');
+
+  async function handleLogin() {
+    try {
+      await auth({ email, password })
+    } catch (error) {
+      setErrorMessage('Erro ao fazer login');
+      Alert.alert('Erro ao fazer login')
+    }
   };
 
   return (
@@ -32,6 +42,7 @@ export function SignIn() {
         <TouchableOpacity style={styles.button} onPress={handleLogin}>
             <Text style={styles.buttonText}>Entrar</Text>
         </TouchableOpacity>
+        <Text style={styles.errorMessage}>{errorMessage}</Text>
     </View>
   );
 };
@@ -69,4 +80,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+  errorMessage: {
+    color: 'red',
+    textAlign: 'center',
+    marginTop: 8,
+  }
 });
