@@ -1,7 +1,7 @@
-import { SignIn } from './screen/SignIn';
+import { Router } from './routes/router';
 
 export default function App() {
   return (
-    <SignIn />
+    <Router />
   );
 }

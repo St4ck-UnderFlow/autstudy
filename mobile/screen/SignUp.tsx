@@ -1,28 +1,42 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import { useAuth } from '../hooks/useAuth';
 
-export function SignIn({navigation}: {navigation: any}) {
+export function SignUp() {
 
+  const [name, setName] = useState('');
+  const [cpf, setCpf] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
-  const { auth } = useAuth();
-
+  const [userType, setUserType] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
-  async function handleLogin() {
-    try {
-      await auth({ email, password })
-    } catch (error) {
-      setErrorMessage('Erro ao fazer login');
-      Alert.alert('Erro ao fazer login')
-    }
+  async function handleSignUp() {
+    console.log({
+        name,
+        cpf,
+        email,
+        password,
+        userType
+    })
   };
 
   return (
     <View style={styles.container}>
-        <Text style={styles.title}>Faça o Login</Text>
+        <Text style={styles.title}>Bem-Vindo !!</Text>
+        <TextInput
+            style={styles.input}
+            placeholder="Nome"
+            value={name}
+            onChangeText={setName}
+            autoCapitalize="none"
+        />
+        <TextInput
+            style={styles.input}
+            placeholder="CPF"
+            value={cpf}
+            onChangeText={setCpf}
+            autoCapitalize="none"
+        />
         <TextInput
             style={styles.input}
             placeholder="Email"
@@ -39,11 +53,15 @@ export function SignIn({navigation}: {navigation: any}) {
             secureTextEntry
             autoCapitalize="none"
         />
-        <TouchableOpacity style={styles.button} onPress={handleLogin}>
-            <Text style={styles.buttonText}>Entrar</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.secondaryButton} onPress={() => { navigation.navigate('SignUp') }}>
-            <Text style={styles.buttonText}>Cadastre-se</Text>
+        <TextInput
+            style={styles.input}
+            placeholder="Tipo de Usuário"
+            value={userType}
+            onChangeText={setUserType}
+            autoCapitalize="none"
+        />
+        <TouchableOpacity style={styles.button} onPress={handleSignUp}>
+            <Text style={styles.buttonText}>Cadastrar</Text>
         </TouchableOpacity>
         <Text style={styles.errorMessage}>{errorMessage}</Text>
     </View>
@@ -52,8 +70,6 @@ export function SignIn({navigation}: {navigation: any}) {
 
 const styles = StyleSheet.create({
   container: {
-    display: 'flex',
-    gap: 12,
     flex: 1,
     justifyContent: 'center',
     paddingHorizontal: 16,
@@ -61,25 +77,19 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: 'bold',
+    marginBottom: 24,
     textAlign: 'center',
   },
   input: {
     height: 48,
     borderColor: '#ccc',
     borderWidth: 1,
+    marginBottom: 12,
     paddingHorizontal: 8,
     borderRadius: 4,
   },
   button: {
     backgroundColor: '#007BFF',
-    height: 48,
-    borderRadius: 4,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  secondaryButton: {
-    backgroundColor: '#94a3b8',
     height: 48,
     borderRadius: 4,
     display: 'flex',
