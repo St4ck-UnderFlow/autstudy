@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import { useAuth } from '../hooks/useAuth';
+import { useUser } from '../hooks/useUser';
 
 export function SignIn({navigation}: {navigation: any}) {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const { auth } = useAuth();
+  const { signIn } = useUser();
 
   const [errorMessage, setErrorMessage] = useState('');
 
   async function handleLogin() {
     try {
-      await auth({ email, password })
+      await signIn({ email, password })
     } catch (error) {
       setErrorMessage('Erro ao fazer login');
       Alert.alert('Erro ao fazer login')
