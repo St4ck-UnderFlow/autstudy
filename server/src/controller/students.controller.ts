@@ -4,8 +4,10 @@ import { StudentService } from "../services/students.service";
 import { createStudentSchema, getStudentByIdSchema } from "../security/schemas/student.schema";
 import { validatePayload } from "../security/middlewares/payloadValidation.middleware";
 import { Student } from "../types/student.type";
+import { UserService } from "../services/user.service";
 
 const studentService = new StudentService();
+const userService = new UserService();
 
 export function StudentController(app: FastifyInstance) {
 
@@ -72,7 +74,10 @@ export function StudentController(app: FastifyInstance) {
     
             const { id } = paramsSchema.parse(request.params);
 
+            const student = await studentService.getById(id);
+
             await studentService.delete(id);
+            await userService.delete(student.userId);
 
             reply.status(204).send();
 

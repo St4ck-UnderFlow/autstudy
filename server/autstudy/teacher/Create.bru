@@ -5,15 +5,20 @@ meta {
 }
 
 post {
-  url: http://localhost:3333/students
+  url: http://localhost:3333/teachers
   body: json
   auth: none
 }
 
 body:json {
   {
-    "cpf": "098.098.098-90",
-    "name": "Vinicius",
-    "supportLevel": "MODERATE"
+    "degreeLevel": "PROFESSIONAL",
+    "user":{
+      "name": "Arthur",
+      "cpf": "123.456.789.01",
+      "email": "arthur@mousinho.com",
+      "password": "senhadomousinho13",
+      "userType": "TEACHER"
+    }
   }
 }

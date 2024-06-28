@@ -9,7 +9,7 @@ export enum SupportLevel {
     SEVERE = 'SEVERE'
 }
 
-export enum DeggreeLevel {
+export enum DegreeLevel {
     ASSOCIATE = 'ASSOCIATE',
     BACHELORS = 'BACHELORS',
     MASTERS = 'MASTERS',

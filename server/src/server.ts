@@ -6,6 +6,7 @@ import jwt from "@fastify/jwt";
 
 import { StudentController } from "./controller/students.controller";
 import { AuthController } from "./controller/auth.controller";
+import { TeacherController } from "./controller/teacher.controller";
 
 export const app = fastify();
 
@@ -22,6 +23,7 @@ JWT_SECRET && app.register(jwt, {
 const PORT = 3333;
 
 StudentController(app);
+TeacherController(app);
 AuthController(app);
 
 app.listen({

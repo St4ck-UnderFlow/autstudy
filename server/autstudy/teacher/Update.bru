@@ -5,18 +5,20 @@ meta {
 }
 
 put {
-  url: http://localhost:3333/students
+  url: http://localhost:3333/teachers/5ef850f6-4773-4591-8e05-b4e4f19dd080
   body: json
   auth: none
 }
 
-query {
-  id: 
-}
-
 body:json {
   {
-    "name": "Miguelito",
-    "supportLevel": "SEVERE"
+     "degreeLevel": "BACHELORS",
+     "user":{
+      "name": "Arthur Silva Mou",
+      "cpf": "123.456.789.01",
+      "email": "arthur@mousinho.com",
+      "password": "senhadomousinho13",
+      "userType": "TEACHER"
+    }
   }
 }

@@ -57,11 +57,10 @@ export class StudentService {
     };
 
     async update(student: Student) {
-        const userUpdated = await userService.update(student.user);
+        await userService.update(student.user);
         const studentUpdated = await prisma.student.update({
             where: { 
-                id: student.id,
-                userId: userUpdated.id 
+                id: student.id
             }, 
             data: {
                 supportLevel: student.supportLevel

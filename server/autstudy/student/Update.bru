@@ -5,18 +5,20 @@ meta {
 }
 
 put {
-  url: http://localhost:3333/students
+  url: http://localhost:3333/students/b91e49fb-9058-4c67-a8d6-2ade518dadae
   body: json
   auth: none
 }
 
-query {
-  id: 
-}
-
 body:json {
   {
-    "name": "Miguelito",
-    "supportLevel": "SEVERE"
+    "supportLevel": "SEVERE",
+    "user":{
+      "name": "Arthur",
+      "cpf": "098.098.098-90",
+      "email": "nicius@nicius.com",
+      "password": "senhadocnicius12",
+      "userType": "STUDENT"
+    }
   }
 }

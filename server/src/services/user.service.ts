@@ -79,14 +79,20 @@ export class UserService {
     }
 
     async update(user: User) {
-        const hasUserSaved = await prisma.user.findUnique({
-            where: { id: user.id }
+        const hasUserSaved = await prisma.user.findFirst({
+            where: { 
+                id: user.id
+            }
         });
         if (!hasUserSaved) {
-            throw new Error('Student not found')
+            throw new Error('User not found')
         };
         const userUpdated = await prisma.user.update({
-            where: { id: user.id }, 
+            where: { 
+                id: user.id,
+                cpf: user.cpf,
+                email: user.email
+            }, 
             data: {
                 name: user.name,
                 cpf: user.cpf,
@@ -94,6 +100,18 @@ export class UserService {
             }
         });
         return userUpdated;
+    }
+
+    async delete(id: string) {
+        const hasUserSaved = await prisma.user.findUnique({
+            where: { id }
+        });
+        if (!hasUserSaved) {
+            throw new Error('Student not found')
+        };
+        await prisma.user.delete({
+            where: { id }
+        });
     }
 
 }
