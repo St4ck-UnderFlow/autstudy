@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { useUser } from '../hooks/useUser';
+import { ButtonStyle } from '../styles/Button.style';
+import { InputStyle } from '../styles/Input.style';
+import { TextStyle } from '../styles/Text.style';
 
 export function SignIn({navigation}: {navigation: any}) {
 
@@ -13,87 +16,59 @@ export function SignIn({navigation}: {navigation: any}) {
 
   async function handleLogin() {
     try {
-      await signIn({ email, password })
+      await signIn({ email, password });
     } catch (error) {
       setErrorMessage('Erro ao fazer login');
-      Alert.alert('Erro ao fazer login')
+      Alert.alert('Erro ao fazer login');
     }
   };
 
   return (
     <View style={styles.container}>
-        <Text style={styles.title}>Faça o Login</Text>
+        <Text style={TextStyle.title}>Acesse sua conta</Text>
         <TextInput
-            style={styles.input}
-            placeholder="Email"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            autoCapitalize="none"
+          style={InputStyle.input}
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
         />
         <TextInput
-            style={styles.input}
-            placeholder="Senha"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-            autoCapitalize="none"
+          style={InputStyle.input}
+          placeholder="Senha"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+          autoCapitalize="none"
         />
-        <TouchableOpacity style={styles.button} onPress={handleLogin}>
-            <Text style={styles.buttonText}>Entrar</Text>
+        <TouchableOpacity 
+          style={ButtonStyle.primaryButton} 
+          onPress={handleLogin}
+        >
+          <Text style={ButtonStyle.primaryButtonText}>
+            Entrar
+          </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.secondaryButton} onPress={() => { navigation.navigate('SignUp') }}>
-            <Text style={styles.buttonText}>Cadastre-se</Text>
+        <TouchableOpacity 
+          style={ButtonStyle.secondaryButton}
+          onPress={() => { navigation.navigate('SignUp') }}
+        >
+          <Text style={ButtonStyle.secondaryButtonText}>
+            Cadastre-se
+          </Text>
         </TouchableOpacity>
-        <Text style={styles.errorMessage}>{errorMessage}</Text>
+        <Text style={TextStyle.errorMessage}>{errorMessage}</Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: 30,
     display: 'flex',
     gap: 12,
     flex: 1,
-    justifyContent: 'center',
     paddingHorizontal: 16,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  input: {
-    height: 48,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    paddingHorizontal: 8,
-    borderRadius: 4,
-  },
-  button: {
-    backgroundColor: '#007BFF',
-    height: 48,
-    borderRadius: 4,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  secondaryButton: {
-    backgroundColor: '#94a3b8',
-    height: 48,
-    borderRadius: 4,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  errorMessage: {
-    color: 'red',
-    textAlign: 'center',
-    marginTop: 8,
   }
 });

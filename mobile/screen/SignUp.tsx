@@ -3,8 +3,12 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-nativ
 import { Picker } from '@react-native-picker/picker';
 import { useUser } from '../hooks/useUser';
 import { SignUpUser, UserType } from '../types/user.type';
+import { TextStyle } from '../styles/Text.style';
+import { InputStyle } from '../styles/Input.style';
+import { PickerStyle } from '../styles/Picker.style';
+import { ButtonStyle } from '../styles/Button.style';
 
-export function SignUp() {
+export function SignUp({navigation}: {navigation: any}) {
 
   const [name, setName] = useState('');
   const [cpf, setCpf] = useState('');
@@ -59,11 +63,11 @@ export function SignUp() {
 
   return (
     <View style={styles.container}>
-        <Text style={styles.title}>
-          Bem-Vindo !!
+        <Text style={TextStyle.title}>
+          Crie sua conta
         </Text>
         <TextInput
-          style={styles.input}
+          style={InputStyle.input}
           placeholder="Nome"
           value={name}
           onChangeText={setName}
@@ -71,7 +75,7 @@ export function SignUp() {
           keyboardType="default"
         />
         <TextInput
-          style={styles.input}
+          style={InputStyle.input}
           placeholder="CPF"
           value={cpf}
           onChangeText={setCpf}
@@ -79,7 +83,7 @@ export function SignUp() {
           keyboardType="default"
         />
         <TextInput
-          style={styles.input}
+          style={InputStyle.input}
           placeholder="Email"
           value={email}
           onChangeText={setEmail}
@@ -87,77 +91,46 @@ export function SignUp() {
           autoCapitalize="none"
         />
         <TextInput
-          style={styles.input}
+          style={InputStyle.input}
           placeholder="Senha"
           value={password}
           onChangeText={setPassword}
           secureTextEntry
           autoCapitalize="none"
         />
-        <View style={styles.pickerContainer}>
+        <View style={PickerStyle.pickerContainer}>
           <Picker
             selectedValue={userType}
             onValueChange={(itemValue) => setUserType(itemValue)}
-            style={styles.picker}
+            style={PickerStyle.picker}
           >
             <Picker.Item label="Selecione o tipo de usuário" value="" />
             <Picker.Item label="Estudante" value="STUDENT" />
             <Picker.Item label="Professor(a)" value="TEACHER" />
           </Picker>
         </View>
-        <TouchableOpacity style={styles.button} onPress={handleSignUp}>
-            <Text style={styles.buttonText}>Cadastrar</Text>
+        <TouchableOpacity style={ButtonStyle.primaryButton} onPress={handleSignUp}>
+            <Text style={ButtonStyle.primaryButtonText}>Cadastrar</Text>
         </TouchableOpacity>
-        <Text style={styles.errorMessage}>{errorMessage}</Text>
+        <TouchableOpacity 
+          style={ButtonStyle.secondaryButton}
+          onPress={() => { navigation.navigate('SignIn') }}
+        >
+          <Text style={ButtonStyle.secondaryButtonText}>
+            Já possui uma conta?
+          </Text>
+        </TouchableOpacity>
+        <Text style={TextStyle.errorMessage}>{errorMessage}</Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: 30,
     flex: 1,
-    justifyContent: 'center',
-    paddingHorizontal: 16,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    marginBottom: 24,
-    textAlign: 'center',
-  },
-  input: {
-    height: 48,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    marginBottom: 12,
-    paddingHorizontal: 8,
-    borderRadius: 4,
-  },
-  button: {
-    backgroundColor: '#007BFF',
-    height: 48,
-    borderRadius: 4,
     display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  errorMessage: {
-    color: 'red',
-    textAlign: 'center',
-    marginTop: 8,
-  },
-  pickerContainer: {
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 4,
-    marginBottom: 12,
-  },
-  picker: {
-    height: 48,
-  },
+    gap: 12,
+    paddingHorizontal: 16,
+  }
 });
