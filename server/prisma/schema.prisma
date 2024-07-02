@@ -53,11 +53,10 @@ model Role {
 }
 
 enum DeggreeLevel {
-  ASSOCIATE
   BACHELORS
   MASTERS
-  GRADUATE
-  PROFESSIONAL
+  PHD
+  POSTDOC
 }
 
 enum SupportLevel {

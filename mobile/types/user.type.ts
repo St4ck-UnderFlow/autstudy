@@ -1,5 +1,5 @@
 import { SupportLevel } from "./student.type";
-import { DeggreeLevel } from "./teacher.type";
+import { DegreeLevel } from "./teacher.type";
 
 export type SignInUser = {
     email: string, 
@@ -7,7 +7,7 @@ export type SignInUser = {
 }
 
 export type SignUpUser = {
-    deggreeLevel?: DeggreeLevel,
+    degreeLevel?: DegreeLevel,
     supportLevel?: SupportLevel,
     user:{
         name: string;

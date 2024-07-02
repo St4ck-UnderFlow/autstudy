@@ -10,9 +10,8 @@ export enum SupportLevel {
 }
 
 export enum DegreeLevel {
-    ASSOCIATE = 'ASSOCIATE',
     BACHELORS = 'BACHELORS',
     MASTERS = 'MASTERS',
-    GRADUATE = 'GRADUATE',
-    PROFESSIONAL = 'PROFESSIONAL',
-  }
+    PHD = 'PHD',
+    POSTDOC = 'POSTDOC',
+}

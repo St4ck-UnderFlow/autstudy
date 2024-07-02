@@ -10,7 +10,7 @@ import { ButtonStyle } from '../styles/Button.style';
 import { SupportLevelSelect } from '../components/SupportLevelSelect';
 import { DegreeLevelSelect } from '../components/DegreeLevelSelect';
 import { SupportLevel } from '../types/student.type';
-import { DeggreeLevel } from '../types/teacher.type';
+import { DegreeLevel } from '../types/teacher.type';
 
 export function SignUp({navigation}: {navigation: any}) {
 
@@ -20,7 +20,7 @@ export function SignUp({navigation}: {navigation: any}) {
   const [password, setPassword] = useState('');
   const [userType, setUserType] = useState<UserType | any>('');
   const [supportLevel, setSupportLevel] = useState<SupportLevel>();
-  const [deggreeLevel, setDeggreeLevel] = useState<DeggreeLevel>();
+  const [degreeLevel, setDegreeLevel] = useState<DegreeLevel>();
 
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -30,7 +30,7 @@ export function SignUp({navigation}: {navigation: any}) {
     if (userType === 'STUDENT' && !supportLevel) {
       return false;
     }
-    if (userType === 'TEACHER' && !deggreeLevel) {
+    if (userType === 'TEACHER' && !degreeLevel) {
       return false;
     }
 
@@ -58,7 +58,7 @@ export function SignUp({navigation}: {navigation: any}) {
 
     if (userType === 'TEACHER') {
       signUpData = {
-        deggreeLevel,
+        degreeLevel,
         ...signUpData
       }
     }
@@ -68,6 +68,7 @@ export function SignUp({navigation}: {navigation: any}) {
     }
 
     try {
+      console.log(signUpData)
       await signUp(signUpData);
     } catch (error) {
       setErrorMessage('Erro durante o cadastro, tente novamente');
@@ -123,7 +124,7 @@ export function SignUp({navigation}: {navigation: any}) {
           </Picker>
         </View>
 
-        {userType === 'TEACHER' && <DegreeLevelSelect onSelectFn={(itemValue) => setDeggreeLevel(itemValue)} />}
+        {userType === 'TEACHER' && <DegreeLevelSelect onSelectFn={(itemValue) => setDegreeLevel(itemValue)} />}
         {userType === 'STUDENT' && <SupportLevelSelect onSelectFn={(itemValue) => setSupportLevel(itemValue)} />}
 
         <TouchableOpacity style={ButtonStyle.primaryButton} onPress={handleSignUp}>

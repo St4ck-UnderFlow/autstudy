@@ -1,8 +1,11 @@
-export type DeggreeLevel = "ASSOCIATE" | "BACHELORS"  | "BACHELORS" |  "MASTERS" 
-| "GRADUATE"  | "PROFESSIONAL" 
+export type DegreeLevel = 
+"BACHELORS" | 
+"MASTERS"   | 
+"PHD"       |  
+"POSTDOC" 
 
 export type Teacher = {
-  deggreeLevel: DeggreeLevel,
+  degreeLevel: DegreeLevel,
   user:{
     name: string;
     cpf: string;
