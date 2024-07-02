@@ -7,70 +7,70 @@ const mockUsers = [
         name: "Alice Johnson",
         cpf: "123.456.789-00",
         email: "alice.johnson@example.com",
-        password: "password123",
+        password: "alicePassword123",
         userType: "TEACHER"
     },
     {
         name: "Bob Smith",
         cpf: "987.654.321-00",
         email: "bob.smith@example.com",
-        password: "password123",
+        password: "bobPassword123",
         userType: "TEACHER"
     },
     {
         name: "Carol Williams",
         cpf: "456.789.123-00",
         email: "carol.williams@example.com",
-        password: "password123",
+        password: "carolPassword123",
         userType: "TEACHER"
     },
     {
         name: "David Brown",
         cpf: "321.654.987-00",
         email: "david.brown@example.com",
-        password: "password123",
+        password: "davidPassword123",
         userType: "TEACHER"
     },
     {
         name: "Emma Davis",
         cpf: "789.123.456-00",
         email: "emma.davis@example.com",
-        password: "password123",
+        password: "emmaPassword123",
         userType: "TEACHER"
     },
     {
         name: "Frank Miller",
         cpf: "654.321.789-00",
         email: "frank.miller@example.com",
-        password: "password123",
+        password: "frankPassword123",
         userType: "STUDENT"
     },
     {
         name: "Grace Wilson",
         cpf: "147.258.369-00",
         email: "grace.wilson@example.com",
-        password: "password123",
+        password: "gracePassword123",
         userType: "STUDENT"
     },
     {
         name: "Henry Moore",
         cpf: "963.852.741-00",
         email: "henry.moore@example.com",
-        password: "password123",
+        password: "henryPassword123",
         userType: "STUDENT"
     },
     {
         name: "Isabella Taylor",
         cpf: "852.741.963-00",
         email: "isabella.taylor@example.com",
-        password: "password123",
+        password: "isabellaPassword123",
         userType: "STUDENT"
     },
     {
         name: "Jack Anderson",
         cpf: "741.963.852-00",
         email: "jack.anderson@example.com",
-        password: "password123",
+        password: "jackPassword123",
         userType: "STUDENT"
     }
 ];
