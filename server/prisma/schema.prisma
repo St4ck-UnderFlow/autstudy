@@ -24,7 +24,7 @@ model User {
 model Teacher {
   id          String       @id @unique @default(uuid())
   userId      String       @unique
-  degreeLevel DeggreeLevel
+  degreeLevel DegreeLevel
 
   user User @relation(fields: [userId], references: [id])
 }
@@ -44,15 +44,15 @@ model Room {
 }
 
 model Role {
-  id        String   @id @unique @default(uuid())
+  id        String     @id @unique @default(uuid())
   name      String
-  userTypes UserType
-  createdAt DateTime @default(now())
+  userTypes UserType[] 
+  createdAt DateTime   @default(now())
 
   users User[]
 }
 
-enum DeggreeLevel {
+enum DegreeLevel {
   BACHELORS
   MASTERS
   PHD
