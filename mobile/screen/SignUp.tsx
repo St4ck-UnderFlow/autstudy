@@ -7,6 +7,10 @@ import { TextStyle } from '../styles/Text.style';
 import { InputStyle } from '../styles/Input.style';
 import { PickerStyle } from '../styles/Picker.style';
 import { ButtonStyle } from '../styles/Button.style';
+import { SupportLevelSelect } from '../components/SupportLevelSelect';
+import { DegreeLevelSelect } from '../components/DegreeLevelSelect';
+import { SupportLevel } from '../types/student.type';
+import { DeggreeLevel } from '../types/teacher.type';
 
 export function SignUp({navigation}: {navigation: any}) {
 
@@ -15,13 +19,22 @@ export function SignUp({navigation}: {navigation: any}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [userType, setUserType] = useState<UserType | any>('');
+  const [supportLevel, setSupportLevel] = useState<SupportLevel>();
+  const [deggreeLevel, setDeggreeLevel] = useState<DeggreeLevel>();
 
   const [errorMessage, setErrorMessage] = useState('');
 
   const { signUp } = useUser();
 
   function validFields() {
-    const fields = [name, cpf, email, password, userType];
+    if (userType === 'STUDENT' && !supportLevel) {
+      return false;
+    }
+    if (userType === 'TEACHER' && !deggreeLevel) {
+      return false;
+    }
+
+    const fields = [name, cpf, email, password];
     return fields.every(field => field.trim() !== '');
   }
 
@@ -38,14 +51,14 @@ export function SignUp({navigation}: {navigation: any}) {
 
     if (userType === 'STUDENT') {
       signUpData = {
-        supportLevel: "MODERATE",
+        supportLevel,
         ...signUpData
       }
     }
 
     if (userType === 'TEACHER') {
       signUpData = {
-        deggreeLevel: 'PROFESSIONAL',
+        deggreeLevel,
         ...signUpData
       }
     }
@@ -109,6 +122,10 @@ export function SignUp({navigation}: {navigation: any}) {
             <Picker.Item label="Professor(a)" value="TEACHER" />
           </Picker>
         </View>
+
+        {userType === 'TEACHER' && <DegreeLevelSelect onSelectFn={(itemValue) => setDeggreeLevel(itemValue)} />}
+        {userType === 'STUDENT' && <SupportLevelSelect onSelectFn={(itemValue) => setSupportLevel(itemValue)} />}
+
         <TouchableOpacity style={ButtonStyle.primaryButton} onPress={handleSignUp}>
             <Text style={ButtonStyle.primaryButtonText}>Cadastrar</Text>
         </TouchableOpacity>
