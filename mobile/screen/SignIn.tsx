@@ -17,6 +17,7 @@ export function SignIn({navigation}: {navigation: any}) {
   async function handleLogin() {
     try {
       await signIn({ email, password });
+      navigation.navigate('Home');
     } catch (error) {
       setErrorMessage('Erro ao fazer login');
       Alert.alert('Erro ao fazer login');

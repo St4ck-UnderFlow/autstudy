@@ -3,6 +3,7 @@ import { dev_environments } from "../environments/dev.environments";
 import { SignInUser, SignUpUser } from "../types/user.type";
 import { useStudent } from "./useStudent";
 import { useTeacher } from "./useTeacher";
+import { useToken } from "./useToken";
 
 export function useUser() {
 
@@ -10,11 +11,13 @@ export function useUser() {
 
     const { createStudent } = useStudent();
     const { createTeacher } = useTeacher();
+    const { setTokenValue, removeToken } = useToken();
 
     async function signIn(signInUser: SignInUser) {
         try {
             const reponse = await axios.post(ENDPOINT, signInUser);
-            console.log(reponse.data)
+            const token = reponse.data.token;
+            await setTokenValue(token);
         } catch (error) {
             throw new Error(error as any);
         }
@@ -52,8 +55,13 @@ export function useUser() {
         }
     }
 
+    async function signOut() {
+        removeToken();
+    }
+
     return {
         signIn,
-        signUp
+        signUp,
+        signOut
     }
 }

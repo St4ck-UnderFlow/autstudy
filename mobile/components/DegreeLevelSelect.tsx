@@ -1,17 +1,17 @@
 import { View } from "react-native";
 import { PickerStyle } from "../styles/Picker.style";
 import { Picker } from "@react-native-picker/picker";
-import { DeggreeLevel } from "../types/teacher.type";
+import { DegreeLevel } from "../types/teacher.type";
 
 interface DegreeLevelSelectProps {
-    onSelectFn: (itemValue: DeggreeLevel) => void;
+    onSelectFn: (itemValue: DegreeLevel) => void;
 }
 
 export function DegreeLevelSelect(props: DegreeLevelSelectProps) {
     return (
         <View style={PickerStyle.pickerContainer}>
           <Picker
-            onValueChange={(itemValue: DeggreeLevel) => props.onSelectFn(itemValue)}
+            onValueChange={(itemValue: DegreeLevel) => props.onSelectFn(itemValue)}
             style={PickerStyle.picker}
           >
             <Picker.Item label="Selecione o Grau de Formação" value="" />

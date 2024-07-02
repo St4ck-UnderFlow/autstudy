@@ -68,8 +68,8 @@ export function SignUp({navigation}: {navigation: any}) {
     }
 
     try {
-      console.log(signUpData)
       await signUp(signUpData);
+      navigation.navigate('Home');
     } catch (error) {
       setErrorMessage('Erro durante o cadastro, tente novamente');
     }
