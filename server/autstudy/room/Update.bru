@@ -1,0 +1,24 @@
+meta {
+  name: Update
+  type: http
+  seq: 4
+}
+
+put {
+  url: http://localhost:3333/rooms/5ef850f6-4773-4591-8e05-b4e4f19dd080
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+     "degreeLevel": "BACHELORS",
+     "user":{
+      "name": "Arthur Silva Mou",
+      "cpf": "123.456.789.01",
+      "email": "arthur@mousinho.com",
+      "password": "senhadomousinho13",
+      "userType": "TEACHER"
+    }
+  }
+}

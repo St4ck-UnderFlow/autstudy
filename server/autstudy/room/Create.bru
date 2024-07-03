@@ -1,0 +1,19 @@
+meta {
+  name: Create
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:3333/rooms
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "title": "Sala de Conversa - Tecnologia",
+    "ownerId": "dc44ffa3-2f82-404f-8d25-5d66658cf1ce",
+    "students": ["45f58f1a-e157-411d-a0b8-b607c77f5cd3"]
+  }
+}

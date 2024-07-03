@@ -1,0 +1,23 @@
+meta {
+  name: Find One
+  type: http
+  seq: 3
+}
+
+get {
+  url: http://localhost:3333/rooms?cpf=123.456.789.01
+  body: json
+  auth: none
+}
+
+query {
+  cpf: 123.456.789.01
+}
+
+body:json {
+  {
+    "cpf": "098.098.098-76",
+    "name": "Vinicius",
+    "supportLevel": "MODERATE"
+  }
+}

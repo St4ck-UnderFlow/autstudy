@@ -8,55 +8,71 @@ datasource db {
 }
 
 model User {
-  id        String   @id @unique @default(uuid())
-  name      String
-  createdAt DateTime @default(now())
-  cpf       String   @unique
-  email     String   @unique
-  password  String
-  userType  UserType
-  roles     Role[]
+  id       String   @id @unique @default(uuid())
+  name     String
+  cpf      String   @unique
+  email    String   @unique
+  password String
+  userType UserType
+  roles    Role[]
 
-  Teacher Teacher?
-  Student Student?
+  Teacher   Teacher?
+  Student   Student?
+  createdAt DateTime @default(now())
 }
 
 model Teacher {
   id          String      @id @unique @default(uuid())
   userId      String      @unique
   degreeLevel DegreeLevel
-  rooms       Room[]      
+  rooms       Room[]
 
   user User @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
 }
 
 model Student {
-  id           String       @id @unique @default(uuid())
-  userId       String       @unique
+  id           String        @id @unique @default(uuid())
+  userId       String        @unique
   supportLevel SupportLevel
-  rooms        Room[]       @relation("RoomToStudent")
+  rooms        StudentRoom[]
 
   user User @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
 }
 
 model Room {
-  id       String    @id @unique @default(uuid())
+  id       String        @id @unique @default(uuid())
   title    String
   ownerId  String
-  students Student[] @relation("RoomToStudent")
-  teacherId  String
+  students StudentRoom[]
+
+  teacher Teacher @relation(fields: [ownerId], references: [id])
 
   createdAt DateTime @default(now())
-  teacher   Teacher @relation(fields: [teacherId], references: [id])
 }
 
 model Role {
   id        String     @id @unique @default(uuid())
   name      String
   userTypes UserType[]
-  createdAt DateTime   @default(now())
+
+  createdAt DateTime @default(now())
 
   users User[]
+}
+
+model StudentRoom {
+  id        String @id @unique @default(uuid())
+  studentId String
+  roomId    String
+
+  student Student @relation(fields: [studentId], references: [id])
+  room    Room    @relation(fields: [roomId], references: [id])
+
+  createdAt DateTime @default(now())
 }
 
 enum DegreeLevel {

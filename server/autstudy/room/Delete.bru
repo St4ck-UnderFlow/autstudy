@@ -1,0 +1,19 @@
+meta {
+  name: Delete
+  type: http
+  seq: 5
+}
+
+delete {
+  url: http://localhost:3333/rooms/70d6eb27-ca47-48c3-98fb-69eb8bf0b078
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "cpf": "098.098.098-76",
+    "name": "Vinicius",
+    "supportLevel": "MODERATE"
+  }
+}

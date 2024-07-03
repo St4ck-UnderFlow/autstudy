@@ -11,6 +11,7 @@ import { RoleSeed } from "../prisma/seeds/role.seed";
 import { TeacherSeed } from "../prisma/seeds/teacher.seed";
 import { UserSeed } from "../prisma/seeds/user.seed";
 import { StudentSeed } from "../prisma/seeds/student.seed";
+import { RoomController } from "./controller/room.controller";
 
 export const app = fastify();
 
@@ -28,6 +29,7 @@ const PORT = 3333;
 
 StudentController(app);
 TeacherController(app);
+RoomController(app);
 AuthController(app);
 
 async function runSeeds() {
