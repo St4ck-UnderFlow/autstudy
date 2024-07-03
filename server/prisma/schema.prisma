@@ -22,9 +22,10 @@ model User {
 }
 
 model Teacher {
-  id          String       @id @unique @default(uuid())
-  userId      String       @unique
+  id          String      @id @unique @default(uuid())
+  userId      String      @unique
   degreeLevel DegreeLevel
+  rooms       Room[]      
 
   user User @relation(fields: [userId], references: [id])
 }
@@ -33,20 +34,26 @@ model Student {
   id           String       @id @unique @default(uuid())
   userId       String       @unique
   supportLevel SupportLevel
+  rooms        Room[]       @relation("RoomToStudent")
 
   user User @relation(fields: [userId], references: [id])
 }
 
 model Room {
-  id        String   @id @unique @default(uuid())
-  title     String
+  id       String    @id @unique @default(uuid())
+  title    String
+  ownerId  String
+  students Student[] @relation("RoomToStudent")
+  teacherId  String
+
   createdAt DateTime @default(now())
+  teacher   Teacher @relation(fields: [teacherId], references: [id])
 }
 
 model Role {
   id        String     @id @unique @default(uuid())
   name      String
-  userTypes UserType[] 
+  userTypes UserType[]
   createdAt DateTime   @default(now())
 
   users User[]
