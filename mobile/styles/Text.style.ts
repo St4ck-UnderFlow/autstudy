@@ -10,5 +10,9 @@ export const TextStyle = StyleSheet.create({
         color: 'red',
         textAlign: 'center',
         marginTop: 8,
+    },
+    text: {
+        fontSize: 18,
+        color: '#0F1828'
     }
 })

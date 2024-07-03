@@ -4,6 +4,7 @@ import { SignInUser, SignUpUser } from "../types/user.type";
 import { useStudent } from "./useStudent";
 import { useTeacher } from "./useTeacher";
 import { useToken } from "./useToken";
+import { useNavigation } from "@react-navigation/native";
 
 export function useUser() {
 
@@ -17,7 +18,7 @@ export function useUser() {
         try {
             const reponse = await axios.post(ENDPOINT, signInUser);
             const token = reponse.data.token;
-            await setTokenValue(token);
+            setTokenValue(token);
         } catch (error) {
             throw new Error(error as any);
         }
