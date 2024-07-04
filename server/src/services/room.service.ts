@@ -4,8 +4,27 @@ import { prisma } from "../../prisma/prisma";
 
 export class RoomService { 
 
-    async save(room: Room) {
-        await prisma.room.create({ data: room });
+    async save(params: { userId: string, title: string }) {
+        const { userId, title } = params;
+
+        const teacher = await prisma.teacher.findUnique({
+            where: {
+                userId
+            }
+        })
+
+        if (!teacher) {
+            return
+        }
+
+        await prisma.room.create(
+            { 
+                data: {
+                    title,
+                    ownerId: teacher.id
+                } 
+            }
+        );
     };
 
     async getAll() {

@@ -4,8 +4,10 @@ import { createStudentSchema, getStudentByIdSchema } from "../security/schemas/s
 import { validatePayload } from "../security/middlewares/payloadValidation.middleware";
 import { RoomService } from "../services/room.service";
 import { Room } from "@prisma/client";
+import { JwtService } from "../security/jwt.service";
 
 const roomService = new RoomService();
+const jwtService = new JwtService();
 
 export function RoomController(app: FastifyInstance) {
 
@@ -14,7 +16,12 @@ export function RoomController(app: FastifyInstance) {
         // { preHandler: validatePayload(createStudentSchema, "body") },
         async (request: FastifyRequest, reply: FastifyReply) => {
             try {
-                await roomService.save(request.body as Room);
+                const token = await jwtService.decode(request);
+                const userId = token.sub;
+
+                const body: any = request.body;
+                await roomService.save({ userId, title: body.title });
+
                 reply.status(201).send(request.body);
             } catch (error) {
                 reply.status(500).send(error);

@@ -1,0 +1,53 @@
+import { Text, View, StyleSheet, TextInput, TouchableOpacity, Alert } from "react-native";
+import { TextStyle } from "../styles/Text.style";
+import { InputStyle } from "../styles/Input.style";
+import { ButtonStyle } from "../styles/Button.style";
+import { useState } from "react";
+import { useRoom } from "../hooks/useRoom";
+
+export function NewRoom() {
+
+    const [ title, setTitle ] = useState('');
+    const [ errorMessage, setErrorMessage ] = useState('');
+
+    const { createNewRoom } = useRoom();
+
+    async function handleNewRoom() {
+        try {
+            await createNewRoom(title);
+            Alert.alert('Sala criada com sucesso');
+        } catch (error) {
+            setErrorMessage('Erro ao criar uma nova sala');
+        }
+    }
+
+    return (
+        <View style={styles.container}>
+            <Text style={TextStyle.title}>
+                Crie uma nova sala
+            </Text>
+            <TextInput
+                style={InputStyle.input}
+                placeholder="Título da sala"
+                value={title}
+                onChangeText={setTitle}
+                autoCapitalize="none"
+                keyboardType="default"
+            />
+            <TouchableOpacity style={ButtonStyle.primaryButton} onPress={handleNewRoom}>
+                <Text style={ButtonStyle.primaryButtonText}>Criar nova sala</Text>
+            </TouchableOpacity>
+            <Text style={TextStyle.errorMessage}>{errorMessage}</Text>
+        </View>
+    )
+}
+
+const styles = StyleSheet.create({
+    container: {
+      marginTop: 30,
+      flex: 1,
+      display: 'flex',
+      gap: 12,
+      paddingHorizontal: 16,
+    }
+});

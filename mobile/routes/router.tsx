@@ -9,6 +9,7 @@ import { Token } from '../types/token.type';
 import { useUser } from '../hooks/useUser';
 import { LogOut } from 'lucide-react-native';
 import { TouchableOpacity } from 'react-native';
+import { NewRoom } from '../screen/NewRoom';
 
 const Stack = createStackNavigator();
 
@@ -28,9 +29,10 @@ export function Router() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="SignIn">
+      <Stack.Navigator initialRouteName="Home">
         <Stack.Screen name="SignIn" component={SignIn} />
         <Stack.Screen name="SignUp" component={SignUp} />
+        <Stack.Screen name="NewRoom" component={NewRoom} />
         <Stack.Screen 
           options={{ 
             title: `Olá, ${tokenDecoded?.name}`,
