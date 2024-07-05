@@ -19,7 +19,7 @@ export function useRoom() {
                     }
                 }
             );
-            console.log(response.data);
+            return response.data;
         } catch (error) {
             throw new Error('Erro during room creation');
         }

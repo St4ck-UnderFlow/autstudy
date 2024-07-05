@@ -17,7 +17,7 @@ export class RoomService {
             return
         }
 
-        await prisma.room.create(
+        const newRoom = await prisma.room.create(
             { 
                 data: {
                     title,
@@ -25,6 +25,8 @@ export class RoomService {
                 } 
             }
         );
+
+        return newRoom;
     };
 
     async getAll() {

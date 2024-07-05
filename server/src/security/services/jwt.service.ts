@@ -1,7 +1,7 @@
 import { FastifyRequest } from "fastify";
-import { app } from "../server";
-import { RoleService } from "../services/role.service";
-import { User } from "../types/user.type";
+import { app } from "../../server";
+import { RoleService } from "../../services/role.service";
+import { User } from "../../types/user.type";
 
 const roleService = new RoleService();
 
@@ -9,7 +9,7 @@ export class JwtService {
 
   async generateToken(user: User) {
     const userRoles = await roleService.getUserRoles(user.userType);
-    const roleNames = userRoles.map(role => role.name);
+    const roleNames = userRoles.map((role: any) => role.name);
 
     const token = app.jwt.sign(
         {

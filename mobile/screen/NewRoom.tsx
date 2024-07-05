@@ -5,7 +5,7 @@ import { ButtonStyle } from "../styles/Button.style";
 import { useState } from "react";
 import { useRoom } from "../hooks/useRoom";
 
-export function NewRoom() {
+export function NewRoom({navigation}: {navigation: any}) {
 
     const [ title, setTitle ] = useState('');
     const [ errorMessage, setErrorMessage ] = useState('');
@@ -14,8 +14,9 @@ export function NewRoom() {
 
     async function handleNewRoom() {
         try {
-            await createNewRoom(title);
-            Alert.alert('Sala criada com sucesso');
+            const newRoom = await createNewRoom(title);
+            console.log(newRoom)
+            navigation.navigate('RoomChat', { roomId: newRoom.id, roomTitle: newRoom.title });
         } catch (error) {
             setErrorMessage('Erro ao criar uma nova sala');
         }

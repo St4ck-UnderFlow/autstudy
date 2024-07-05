@@ -4,12 +4,13 @@ import { createStudentSchema, getStudentByIdSchema } from "../security/schemas/s
 import { validatePayload } from "../security/middlewares/payloadValidation.middleware";
 import { RoomService } from "../services/room.service";
 import { Room } from "@prisma/client";
-import { JwtService } from "../security/jwt.service";
+import { JwtService } from "../security/services/jwt.service";
+
 
 const roomService = new RoomService();
 const jwtService = new JwtService();
 
-export function RoomController(app: FastifyInstance) {
+export function RoomController(app: FastifyInstance, io: any) {
 
     app.post(
         '/rooms', 
@@ -20,9 +21,11 @@ export function RoomController(app: FastifyInstance) {
                 const userId = token.sub;
 
                 const body: any = request.body;
-                await roomService.save({ userId, title: body.title });
+                const newRoom = await roomService.save({ userId, title: body.title });
 
-                reply.status(201).send(request.body);
+                io.emit('newRoom', newRoom);
+
+                reply.status(201).send(newRoom);
             } catch (error) {
                 reply.status(500).send(error);
             }

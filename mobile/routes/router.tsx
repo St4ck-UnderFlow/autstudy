@@ -10,6 +10,7 @@ import { useUser } from '../hooks/useUser';
 import { LogOut } from 'lucide-react-native';
 import { TouchableOpacity } from 'react-native';
 import { NewRoom } from '../screen/NewRoom';
+import { RoomChat } from '../screen/RoomChat';
 
 const Stack = createStackNavigator();
 
@@ -30,9 +31,10 @@ export function Router() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen name="SignIn" component={SignIn} />
-        <Stack.Screen name="SignUp" component={SignUp} />
+        <Stack.Screen name="SignIn" component={SignIn} options={{headerShown: false}} />
+        <Stack.Screen name="SignUp" component={SignUp} options={{headerShown: false}} />
         <Stack.Screen name="NewRoom" component={NewRoom} />
+        <Stack.Screen name="RoomChat" component={RoomChat} options={{title: 'Sala de Estudos'}} />
         <Stack.Screen 
           options={{ 
             title: `Olá, ${tokenDecoded?.name}`,

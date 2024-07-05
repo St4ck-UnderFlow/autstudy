@@ -1,7 +1,6 @@
 import { prisma } from "../../prisma/prisma";
-import { HashService } from "../security/hash.service";
-import { JwtService } from "../security/jwt.service";
-import { app } from "../server";
+import { HashService } from "../security/services/hash.service";
+import { JwtService } from "../security/services/jwt.service";
 import { User } from "../types/user.type";
 import { RoleService } from "./role.service";
 
@@ -26,7 +25,7 @@ export class UserService {
             throw new Error("Invalid credentials");
         }
 
-        const token = await jwtService.generateToken(user);
+        const token = await jwtService.generateToken(user as any);
         return token;
     }
 

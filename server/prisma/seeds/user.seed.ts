@@ -1,4 +1,4 @@
-import { HashService } from "../../src/security/hash.service";
+import { HashService } from "../../src/security/services/hash.service";
 import { UserType } from "../../src/types/enums.enum";
 import { prisma } from "../prisma";
 
