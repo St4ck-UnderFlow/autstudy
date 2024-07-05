@@ -1,9 +1,25 @@
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, FlatList } from 'react-native';
 import { TextStyle } from '../styles/Text.style';
 import { RoomCard } from '../components/RoomCard';
 import { Plus } from 'lucide-react-native';
+import { useEffect, useState } from 'react';
+import { useRoom } from '../hooks/useRoom';
 
 export function Home({navigation}: {navigation: any}) {
+
+    const [ rooms, setRooms ] = useState<any[]>([])
+
+    const { getRooms } = useRoom();
+
+    async function loadRooms() {
+        const allRooms = await getRooms();
+        setRooms(allRooms);
+    }
+
+    useEffect(() => {
+        loadRooms();
+    }, [])
+
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -19,12 +35,24 @@ export function Home({navigation}: {navigation: any}) {
                     />
                 </TouchableOpacity>
             </View>
-            <RoomCard />
-            <RoomCard />
-            <RoomCard />
-            <RoomCard />
-            <RoomCard />
-            <RoomCard />
+            <SafeAreaView>
+                <FlatList
+                    data={rooms}
+                    renderItem={({item}) => {
+                        return (
+                            <TouchableOpacity onPress={() => navigation.navigate('RoomChat', { roomId: item.id, roomTitle: item.title })}>
+                                <RoomCard 
+                                    title={item.title} 
+                                    usersAmount={item.students.length} 
+                                    id={item.id} 
+                                />
+                            </TouchableOpacity>
+                        )
+                    }}
+                    keyExtractor={item => item.id}
+                    ItemSeparatorComponent={() => <View style={styles.separator} />}
+                />
+            </SafeAreaView>
         </View>
     )
 }
@@ -42,5 +70,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-    }
+    },
+    separator: {
+        height: 12,
+    },
 });

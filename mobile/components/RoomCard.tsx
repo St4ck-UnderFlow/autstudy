@@ -1,21 +1,36 @@
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { primaryColor } from "../styles/Global.style";
-import { LogIn } from "lucide-react-native";
 
-export function RoomCard() {
+interface RoomCardProps {
+    id: string;
+    title: string;
+    usersAmount: number;
+}
+
+export function RoomCard(props: RoomCardProps) {
+
+
+    function getAlias() {
+        const words = props.title.split(' '); 
+        const firstLetter = words[0][0].toUpperCase();
+        const secondLetter = words.length > 1 ? words[1][0].toUpperCase() : '';
+        const alias = (firstLetter + secondLetter).slice(0, 2);
+        return alias;
+    }
+
     return (
         <View style={styles.container}>
             <View style={styles.avatar}>
                 <Text style={styles.avatarText}>
-                    EB
+                    { getAlias() }
                 </Text>
             </View>
             <View style={styles.header}>
                 <Text style={styles.headerTitle}>
-                    Estudos de Biologia
+                    { props.title }
                 </Text>
                 <Text style={styles.headerDescription}>
-                    10 participantes
+                    { props.usersAmount } participantes
                 </Text>
             </View>
         </View>

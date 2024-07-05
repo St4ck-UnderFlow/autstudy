@@ -41,6 +41,16 @@ export function RoomController(app: FastifyInstance, io: any) {
         }
     })
 
+    app.get('/rooms/messages/:id', async (request: FastifyRequest, reply: FastifyReply) => {
+        try {
+            const { id } = request.params as { id: string };
+            const roomMessages = await roomService.getRoomMessages(id);
+            return await reply.send(roomMessages);
+        } catch (error) {
+            reply.status(404).send(error);
+        }
+    })
+
     app.get(
         '/rooms/:id', 
         { preHandler: validatePayload(getStudentByIdSchema, "body") },

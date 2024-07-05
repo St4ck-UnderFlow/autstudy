@@ -18,7 +18,8 @@ model User {
 
   Teacher   Teacher?
   Student   Student?
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
+  Message   Message[]
 }
 
 model Teacher {
@@ -62,7 +63,8 @@ model Message {
   content   String
   createdAt DateTime @default(now())
 
-  room Room @relation(fields: [roomId], references: [id])
+  user   User   @relation(fields: [senderId], references: [id])
+  room   Room   @relation(fields: [roomId], references: [id])
 }
 
 model Role {

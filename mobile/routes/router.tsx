@@ -30,7 +30,7 @@ export function Router() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
+      <Stack.Navigator initialRouteName="SignIn">
         <Stack.Screen name="SignIn" component={SignIn} options={{headerShown: false}} />
         <Stack.Screen name="SignUp" component={SignUp} options={{headerShown: false}} />
         <Stack.Screen name="NewRoom" component={NewRoom} />

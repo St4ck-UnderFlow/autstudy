@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, FlatList, KeyboardAvoidingView } from 'react-native';
 import { Send } from 'lucide-react-native';
 import { ButtonStyle } from '../styles/Button.style';
@@ -6,32 +6,40 @@ import { InputStyle } from '../styles/Input.style';
 import { useNavigation } from '@react-navigation/native';
 import { io } from 'socket.io-client';
 import { useToken } from '../hooks/useToken';
+import { useRoom } from '../hooks/useRoom';
 
 const socket = io('http://localhost:3333');
 
 export function RoomChat({ route }: any) {
-
-  const { roomId, roomTitle } = route.params; 
+  const { roomId, roomTitle } = route.params;
 
   const navigation = useNavigation();
   const { decodeToken, getToken } = useToken();
 
+  const [message, setMessage] = useState('');
+  const [messages, setMessages] = useState<any[]>([]);
+  const [currentUserId, setCurrentUserId] = useState('');
 
-  const [ message, setMessage ] = useState('');
-  const [ messages, setMessages ] = useState<any[]>([]);
-  const [ currentUserId, setCurrentUserId ] = useState('');
+  const { getRoomMessages } = useRoom();
+
+  async function loadRoomMessages() {
+    const allMessages = await getRoomMessages(roomId);
+    if (allMessages.length > 0) {
+      setMessages(allMessages);
+    }
+  }
 
   useEffect(() => {
-
     navigation.setOptions({
       headerTitle: roomTitle,
     });
 
     const tokenDecoded = decodeToken(getToken() || '');
-
     setCurrentUserId((tokenDecoded as any).sub);
 
-    socket.emit('joinRoom', roomId); 
+    socket.emit('joinRoom', roomId);
+
+    loadRoomMessages();
 
     socket.on('chatMessage', (message) => {
       setMessages((prevMessages) => [...prevMessages, message]);
@@ -40,45 +48,52 @@ export function RoomChat({ route }: any) {
     return () => {
       socket.off('chatMessage');
     };
-  }, []);
+  }, []); 
 
   function sendMessage() {
     if (message.trim() === '') {
       return;
     }
+
+    const newMessage = { roomId, senderId: currentUserId, content: message }
+
+    socket.emit('chatMessage', newMessage);
     setMessage('');
-    socket.emit('chatMessage', ({ roomId, senderId: currentUserId, message }));
-  };
+  }
 
   const renderItem = ({ item }: any) => (
-      <View style={item.senderId === currentUserId ? styles.messageBySenderContainer : styles.messageByReceiverContainer}>
-      <Text style={styles.senderText}>{item.senderId === currentUserId ? 'Você' : 'Vinícius'}</Text>
-      <Text style={styles.messageText}>{item.message}</Text>
-      </View>
+    <View style={item.senderId === currentUserId ? styles.messageBySenderContainer : styles.messageByReceiverContainer}>
+      <Text style={styles.senderText}>
+        {item.senderId === currentUserId ? 'Você' : item.user.name}
+      </Text>
+      <Text style={styles.messageText}>
+        {item.content}
+      </Text>
+    </View>
   );
 
   return (
-        <KeyboardAvoidingView behavior="padding" style={styles.container}>
-        <FlatList
-            data={messages}
-            renderItem={renderItem}
-            keyExtractor={(item) => item.id}
-            style={styles.messagesList}
+    <KeyboardAvoidingView behavior="padding" style={styles.container}>
+      <FlatList
+        data={messages}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id || Math.random().toString()}
+        style={styles.messagesList}
+      />
+      <View style={styles.messageInputContainer}>
+        <TextInput
+          style={{ ...InputStyle.input, flex: 1 }}
+          value={message}
+          onChangeText={setMessage}
+          placeholder="Digite sua mensagem"
+          autoCapitalize="none"
+          keyboardType="default"
         />
-        <View style={styles.messageInputContainer}>
-            <TextInput
-                style={{ ...InputStyle.input, flex: 1 }}
-                value={message}
-                onChangeText={setMessage}
-                placeholder="Digite sua mensagem"
-                autoCapitalize="none"
-                keyboardType="default"
-            />
-            <TouchableOpacity style={styles.sendMessageButton} onPress={sendMessage}>
-            <Send size={20} color='white' />
-            </TouchableOpacity>
-        </View>
-        </KeyboardAvoidingView>
+        <TouchableOpacity style={styles.sendMessageButton} onPress={sendMessage}>
+          <Send size={20} color="white" />
+        </TouchableOpacity>
+      </View>
+    </KeyboardAvoidingView>
   );
 }
 

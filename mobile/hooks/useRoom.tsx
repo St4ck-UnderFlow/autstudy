@@ -25,8 +25,43 @@ export function useRoom() {
         }
     }
 
+    async function getRooms() {
+        try {
+            const response = await axios.get(
+                ENDPOINT, 
+                {
+                    headers: {
+                        Authorization: `Bearer ${getToken()}`
+                    }
+                }
+            );
+            return response.data;
+        } catch (error) {
+            throw new Error('Erro during room listing');
+        }
+    }
+
+    async function getRoomMessages(roomId: string) {
+        const ENDPOINT = `${dev_environments.API_BASE_URL}/rooms/messages/${roomId}`;
+        try {
+            const response = await axios.get(
+                ENDPOINT, 
+                {
+                    headers: {
+                        Authorization: `Bearer ${getToken()}`
+                    }
+                }
+            );
+            return response.data;
+        } catch (error) {
+            throw new Error('Erro during room listing');
+        }
+    }
+
     return {
-        createNewRoom
+        createNewRoom,
+        getRooms,
+        getRoomMessages
     }
 
 }

@@ -31,6 +31,9 @@ export class RoomService {
 
     async getAll() {
         const room = await prisma.room.findMany({
+            orderBy: {
+                createdAt: 'desc'
+            },
             include: {
                 students: true,
                 teacher: true
@@ -85,5 +88,18 @@ export class RoomService {
         });
         return roomUpdated;
     };
+
+    async getRoomMessages(roomId: string) {
+        const allMessages = await prisma.message.findMany({
+            where: {
+                roomId
+            },
+            include: {
+                user: true
+            }
+        }) 
+
+        return allMessages;
+    }
 
 }

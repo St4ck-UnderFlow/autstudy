@@ -43,18 +43,21 @@ io.on('connection', (socket) => {
         console.log(`User joined room: ${roomId}`);
     });
 
-    socket.on('chatMessage', async ({ roomId, senderId, message }) => {
+    socket.on('chatMessage', async ({ roomId, senderId, content }) => {
         const newMessage = await prisma.message.create({
             data: {
                 roomId,
                 senderId,
-                content: message,
+                content
             },
+            include: {
+                user: true
+            }
         });
 
         console.log(newMessage)
 
-        io.to(roomId).emit('chatMessage', { senderId, message });
+        io.to(roomId).emit('chatMessage', { senderId, content, user: newMessage.user });
     });
 
     socket.on('disconnect', () => {
