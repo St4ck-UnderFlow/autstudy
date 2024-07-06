@@ -45,10 +45,11 @@ model Student {
 }
 
 model Room {
-  id       String        @id @unique @default(uuid())
-  title    String
-  ownerId  String
-  students StudentRoom[]
+  id               String        @id @unique @default(uuid())
+  title            String
+  ownerId          String
+  classSupportLevel SupportLevel
+  students         StudentRoom[]
 
   teacher Teacher @relation(fields: [ownerId], references: [id])
 
@@ -63,8 +64,8 @@ model Message {
   content   String
   createdAt DateTime @default(now())
 
-  user   User   @relation(fields: [senderId], references: [id])
-  room   Room   @relation(fields: [roomId], references: [id])
+  user User @relation(fields: [senderId], references: [id])
+  room Room @relation(fields: [roomId], references: [id])
 }
 
 model Role {

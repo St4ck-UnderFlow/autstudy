@@ -4,17 +4,20 @@ import { InputStyle } from "../styles/Input.style";
 import { ButtonStyle } from "../styles/Button.style";
 import { useState } from "react";
 import { useRoom } from "../hooks/useRoom";
+import { SupportLevelSelect } from "../components/SupportLevelSelect";
+import { SupportLevel } from "../types/student.type";
 
 export function NewRoom({navigation}: {navigation: any}) {
 
     const [ title, setTitle ] = useState('');
     const [ errorMessage, setErrorMessage ] = useState('');
+    const [ classSupportLevel, setClassSupportLevel ] = useState<SupportLevel | any>('');
 
     const { createNewRoom } = useRoom();
 
     async function handleNewRoom() {
         try {
-            const newRoom = await createNewRoom(title);
+            const newRoom = await createNewRoom({ title, classSupportLevel });
             console.log(newRoom)
             navigation.navigate('RoomChat', { roomId: newRoom.id, roomTitle: newRoom.title });
         } catch (error) {
@@ -35,6 +38,7 @@ export function NewRoom({navigation}: {navigation: any}) {
                 autoCapitalize="none"
                 keyboardType="default"
             />
+            <SupportLevelSelect onSelectFn={(itemValue) => setClassSupportLevel(itemValue)} />
             <TouchableOpacity style={ButtonStyle.primaryButton} onPress={handleNewRoom}>
                 <Text style={ButtonStyle.primaryButtonText}>Criar nova sala</Text>
             </TouchableOpacity>

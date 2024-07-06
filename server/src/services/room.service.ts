@@ -1,10 +1,11 @@
 import { Room } from "@prisma/client";
 import { prisma } from "../../prisma/prisma";
+import { SupportLevel } from "../types/enums.enum";
 
 
 export class RoomService { 
 
-    async save(params: { userId: string, title: string }) {
+    async save(params: { userId: string, title: string, classSupportLevel: SupportLevel}) {
         const { userId, title } = params;
 
         const teacher = await prisma.teacher.findUnique({
@@ -21,8 +22,9 @@ export class RoomService {
             { 
                 data: {
                     title,
+                    classSupportLevel: params.classSupportLevel,
                     ownerId: teacher.id
-                } 
+                } as any
             }
         );
 

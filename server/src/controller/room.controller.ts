@@ -31,7 +31,7 @@ export function RoomController(app: FastifyInstance, io: any) {
 
                 const body: any = request.body;
 
-                const newRoom = await roomService.save({ userId, title: body.title });
+                const newRoom = await roomService.save({ userId, title: body.title, classSupportLevel: body.classSupportLevel});
 
                 io.emit('newRoom', newRoom);
 

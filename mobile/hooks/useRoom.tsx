@@ -8,11 +8,11 @@ export function useRoom() {
     
     const { getToken } = useToken();
 
-    async function createNewRoom(title: string) {
+    async function createNewRoom(data: { title: string, classSupportLevel: string }) {
         try {
             const response = await axios.post(
                 ENDPOINT, 
-                { title },
+                data,
                 {
                     headers: {
                         Authorization: `Bearer ${getToken()}`
