@@ -5,6 +5,8 @@ import { validatePayload } from "../security/middlewares/payloadValidation.middl
 import { RoomService } from "../services/room.service";
 import { Room } from "@prisma/client";
 import { JwtService } from "../security/services/jwt.service";
+import { validateRole } from "../security/middlewares/roleValidation.middleware";
+import { validateJwt } from "../security/middlewares/jwtValidation.middleware";
 
 
 const roomService = new RoomService();
@@ -14,7 +16,12 @@ export function RoomController(app: FastifyInstance, io: any) {
 
     app.post(
         '/rooms', 
-        // { preHandler: validatePayload(createStudentSchema, "body") },
+        { 
+            preHandler: [
+                validateJwt(),
+                validateRole("room.create")
+            ] 
+        },
         async (request: FastifyRequest, reply: FastifyReply) => {
             try {
                 const token = await jwtService.decode(request);
@@ -32,7 +39,14 @@ export function RoomController(app: FastifyInstance, io: any) {
         }
     )
 
-    app.get('/rooms', async (request: FastifyRequest, reply: FastifyReply) => {
+    app.get('/rooms',
+        {
+            preHandler: [
+                validateJwt(),
+                validateRole("room.list")
+            ]
+        },
+        async (request: FastifyRequest, reply: FastifyReply) => {
         try {
             const rooms = await roomService.getAll();
             return await reply.send(rooms);
@@ -53,7 +67,13 @@ export function RoomController(app: FastifyInstance, io: any) {
 
     app.get(
         '/rooms/:id', 
-        { preHandler: validatePayload(getStudentByIdSchema, "body") },
+        { 
+            preHandler: [
+                validatePayload(getStudentByIdSchema, "body"), 
+                validateJwt(),
+                validateRole("room.list")
+            ] 
+        },
         async (request: FastifyRequest, reply: FastifyReply) => {
             try {
                 const room = await roomService.getById(request.params as string);
@@ -68,14 +88,18 @@ export function RoomController(app: FastifyInstance, io: any) {
         '/rooms/:id', 
         { 
             preHandler: [ 
-                validatePayload(getStudentByIdSchema, "params"), 
-                validatePayload(createStudentSchema, "body")
+                validateJwt(),
+                validateRole("room.update")
             ] 
         },
         async (request: FastifyRequest, reply: FastifyReply) => {
             try {
                 const id = (request.params as { id: string }).id;
-                const data = request.body as Room;
+                const body = request.body as any;
+                const data = {
+                    id,
+                    ...body
+                };
                 await roomService.update(data);
                 reply.status(204).send();
             } catch (error) {
@@ -84,7 +108,14 @@ export function RoomController(app: FastifyInstance, io: any) {
         }
     )
 
-    app.delete('/rooms/:id', async (request: FastifyRequest, reply: FastifyReply) => {
+    app.delete('/rooms/:id',
+        {
+            preHandler: [
+                validateJwt(),
+                validateRole("room.delete")
+            ]
+        },
+        async (request: FastifyRequest, reply: FastifyReply) => {
         try {
             const paramsSchema = z.object({
                 id: z.string().uuid()

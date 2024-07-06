@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { JwtService } from "../jwt.service";
+import { JwtService } from "../services/jwt.service";
 
 const jwtService = new JwtService();
 
