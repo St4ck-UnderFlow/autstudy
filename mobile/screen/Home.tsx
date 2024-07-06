@@ -43,7 +43,6 @@ export function Home({navigation}: {navigation: any}) {
                             <TouchableOpacity onPress={() => navigation.navigate('RoomChat', { roomId: item.id, roomTitle: item.title })}>
                                 <RoomCard 
                                     title={item.title} 
-                                    usersAmount={item.students.length} 
                                     id={item.id} 
                                 />
                             </TouchableOpacity>

@@ -69,4 +69,16 @@ export class StudentService {
         return studentUpdated;
     };
 
+    async getByUserId(userId: string) {
+        const student = await prisma.student.findUnique({
+            where: {
+                userId
+            }
+        })
+        if (!student) {
+            throw new Error('Student not found')
+        }
+        return student;
+    }
+
 }

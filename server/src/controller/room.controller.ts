@@ -1,17 +1,18 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { z } from 'zod';
-import { createStudentSchema, getStudentByIdSchema } from "../security/schemas/student.schema";
 import { validatePayload } from "../security/middlewares/payloadValidation.middleware";
 import { RoomService } from "../services/room.service";
-import { Room } from "@prisma/client";
 import { JwtService } from "../security/services/jwt.service";
 import { validateRole } from "../security/middlewares/roleValidation.middleware";
 import { validateJwt } from "../security/middlewares/jwtValidation.middleware";
 import { createRoomSchema, getRoomByIdSchema } from "../security/schemas/room.schema";
+import { prisma } from "../../prisma/prisma";
+import { StudentService } from "../services/students.service";
 
 
 const roomService = new RoomService();
 const jwtService = new JwtService();
+const studentService = new StudentService()
 
 export function RoomController(app: FastifyInstance, io: any) {
 
@@ -57,6 +58,33 @@ export function RoomController(app: FastifyInstance, io: any) {
             reply.status(404).send(error);
         }
     })
+
+    app.get('/rooms/supportLevel',
+        {
+            preHandler: [
+                validateJwt(),
+                validateRole("room.list")
+            ]
+        },
+        async (request: FastifyRequest, reply: FastifyReply) => {
+            try {
+                console.log('aqui que eh aqui')
+                const tokenDecoded = await jwtService.decode(request);
+
+                const student = await studentService.getByUserId(tokenDecoded.sub);
+                const studentSupportLevel = student.supportLevel;
+
+                const roomsWithSupportLevel = await prisma.room.findMany({
+                    where: {
+                        classSupportLevel: studentSupportLevel
+                    }
+                });
+                return roomsWithSupportLevel;
+            } catch (error) {
+                reply.status(404).send(error);
+            }
+        }
+    )
 
     app.get('/rooms/messages/:id', async (request: FastifyRequest, reply: FastifyReply) => {
         try {

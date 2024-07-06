@@ -23,7 +23,7 @@ export class RoomService {
                 data: {
                     title,
                     classSupportLevel: params.classSupportLevel,
-                    ownerId: teacher.id
+                    ownerId: teacher.id,
                 } as any
             }
         );

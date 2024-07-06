@@ -1,12 +1,13 @@
 import axios from "axios";
 import { dev_environments } from "../environments/dev.environments";
 import { useToken } from "./useToken";
+import { SupportLevel } from "../types/student.type";
 
 export function useRoom() {
 
     const ENDPOINT = `${dev_environments.API_BASE_URL}/rooms`;
     
-    const { getToken } = useToken();
+    const { getToken, decodeToken } = useToken();
 
     async function createNewRoom(data: { title: string, classSupportLevel: string }) {
         try {
@@ -27,6 +28,21 @@ export function useRoom() {
 
     async function getRooms() {
         try {
+            const tokenDecoded = decodeToken(getToken() || '');
+            if (tokenDecoded?.userType === 'STUDENT') {
+                console.log('student aqui')
+                const response = await axios.get(
+                    `${ENDPOINT}/supportLevel`, 
+                    {
+                        headers: {
+                            Authorization: `Bearer ${getToken()}`
+                        }
+                    }
+                );
+                console.log(response.data)
+                return response.data
+            }
+
             const response = await axios.get(
                 ENDPOINT, 
                 {
@@ -36,6 +52,7 @@ export function useRoom() {
                 }
             );
             return response.data;
+
         } catch (error) {
             throw new Error('Erro during room listing');
         }

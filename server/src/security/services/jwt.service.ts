@@ -15,7 +15,8 @@ export class JwtService {
         {
           name: user.name,
           email: user.email,
-          roles: roleNames
+          roles: roleNames,
+          userType: user.userType,
         },
         {
           sub: user.id,

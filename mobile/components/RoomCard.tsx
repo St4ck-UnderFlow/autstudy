@@ -4,7 +4,6 @@ import { primaryColor } from "../styles/Global.style";
 interface RoomCardProps {
     id: string;
     title: string;
-    usersAmount: number;
 }
 
 export function RoomCard(props: RoomCardProps) {
@@ -30,7 +29,7 @@ export function RoomCard(props: RoomCardProps) {
                     { props.title }
                 </Text>
                 <Text style={styles.headerDescription}>
-                    { props.usersAmount } participantes
+                    Participe agora
                 </Text>
             </View>
         </View>
