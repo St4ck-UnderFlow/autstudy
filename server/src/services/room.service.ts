@@ -14,7 +14,7 @@ export class RoomService {
         })
 
         if (!teacher) {
-            return
+            throw new Error('Teacher not found');
         }
 
         const newRoom = await prisma.room.create(

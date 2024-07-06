@@ -7,6 +7,7 @@ import { Room } from "@prisma/client";
 import { JwtService } from "../security/services/jwt.service";
 import { validateRole } from "../security/middlewares/roleValidation.middleware";
 import { validateJwt } from "../security/middlewares/jwtValidation.middleware";
+import { createRoomSchema, getRoomByIdSchema } from "../security/schemas/room.schema";
 
 
 const roomService = new RoomService();
@@ -18,6 +19,7 @@ export function RoomController(app: FastifyInstance, io: any) {
         '/rooms', 
         { 
             preHandler: [
+                validatePayload(createRoomSchema, "body"),
                 validateJwt(),
                 validateRole("room.create")
             ] 
@@ -28,6 +30,7 @@ export function RoomController(app: FastifyInstance, io: any) {
                 const userId = token.sub;
 
                 const body: any = request.body;
+
                 const newRoom = await roomService.save({ userId, title: body.title });
 
                 io.emit('newRoom', newRoom);
@@ -69,7 +72,7 @@ export function RoomController(app: FastifyInstance, io: any) {
         '/rooms/:id', 
         { 
             preHandler: [
-                validatePayload(getStudentByIdSchema, "body"), 
+                validatePayload(getRoomByIdSchema, "body"), 
                 validateJwt(),
                 validateRole("room.list")
             ] 
@@ -88,6 +91,8 @@ export function RoomController(app: FastifyInstance, io: any) {
         '/rooms/:id', 
         { 
             preHandler: [ 
+                validatePayload(getRoomByIdSchema, "params"),
+                validatePayload(createRoomSchema, "body"),
                 validateJwt(),
                 validateRole("room.update")
             ] 
@@ -111,6 +116,7 @@ export function RoomController(app: FastifyInstance, io: any) {
     app.delete('/rooms/:id',
         {
             preHandler: [
+                validatePayload(getRoomByIdSchema, "params"),
                 validateJwt(),
                 validateRole("room.delete")
             ]

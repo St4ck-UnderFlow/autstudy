@@ -11,7 +11,11 @@ export function validatePayload(schema: z.ZodObject<any>, key: 'body' | 'params'
             }
             done();
         } catch (error: any) {
-            const errorMessage = "Invalid payload";
+            let errorMessage = '';
+
+            if (key == "body") errorMessage = 'Invalid payload in body';
+            if (key == "params") errorMessage = 'Invalid payload in params';
+
             reply.status(400).send({ statusCode: error.statusCode, message: errorMessage });
         }
     }
