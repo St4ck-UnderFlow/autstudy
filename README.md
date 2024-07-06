@@ -1,72 +1,27 @@
 # Autstudy
+Autstudy is an application designed to improve interaction and communication between students with autism spectrum disorder and their teachers.
 
-A study platform for autism students social interaction improvement
+## Running Guide
 
-## Features
+###  Requirements
+- [Docker](https://www.docker.com/)
+- [Node/NPM](https://nodejs.org/en)
 
-### Authentication
-
-- [ ] It should be able to authenticate using e-mail & password;
-- [ ] It should be able to authenticate using Gmail;
-- [ ] It should be able to recover password using e-mail;
-- [ ] It should be able to create an account (e-mail, name and password);
-- [ ] It should be able to create an account with Gmail;
-
-
-### Rooms
-
-- [ ] It should be able to create a new room;
-- [ ] It should be able to send text messages (Q&A)
-- [ ] It should be able to send audio messages (Q&A)
-- [ ] It should be able to send images (Q&A)
-
-### Invites
-
-- [ ] It should be able to invite a new member (e-mail, role);
-- [ ] It should be able to accept an invite;
-- [ ] It should be able to delete an invite;
-- [ ] It should be able to create an invite;
-- [ ] It should be able to send an invite;
-
-
-### Permissions table
-
-| Action              | Teacher | Student |
-| ------------------- | ------- | ------- |
-| Update room         | ✅      | ❌      |
-| Delete room         | ✅      | ❌      |
-| Invite a student    | ✅      | ❌      |
-| List students       | ✅      | ✅      |
-| Remove student      | ✅      | ❌      |
-| Create a new room   | ✅      | ❌      |
-| Join in a room      | ✅      | ✅      |
-| Send a question     | ✅      | ✅      |
-
-> ✅ = allowed
-> ❌ = not allowed
-
-### Running Guide (Developlement Environment)
-
-#### 🐋 Docker Container (PostgreSQL)
+### Docker Container (PostgreSQL)
 ```
 cd server
 docker compose up -d
 ```
 
-#### 🗄️ Server (NodeJs API)
+### Server (API)
 ```
 cd server
 npm install 
 npm run dev
 ```
-##### Open Prisma Studio
-GUI to view and edit data in database
-```
-cd server
-npm run studio
-```
+- It will start running at [http://localhost:3333](http://localhost:3333)
 
-##### Prisma Migration
+#### Prisma Migration (Database)
 ```
 cd server
 npm run migrate
@@ -76,5 +31,10 @@ npm run migrate
 ```
 cd mobile
 npm install 
-npm run start
+npm run web
 ```
+- It will start running at [http://localhost:8081/](http://localhost:8081)
+
+Ps:. During development, we use the browser to facilitate real-time visualization of the application because we developed our own API. We recommend to open the application with the DevTools (mobile) in the browser.
+
+![Dev Tools Preview](./docs/dev-tools-preview.png)
