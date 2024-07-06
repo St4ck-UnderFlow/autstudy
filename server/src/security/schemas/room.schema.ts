@@ -9,3 +9,7 @@ export const createRoomSchema = z.object({
 export const getRoomByIdSchema = z.object({
     id: z.string().uuid()
 });
+
+export const updateRoomSchema = z.object({
+    title: z.string()
+});

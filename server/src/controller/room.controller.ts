@@ -5,7 +5,7 @@ import { RoomService } from "../services/room.service";
 import { JwtService } from "../security/services/jwt.service";
 import { validateRole } from "../security/middlewares/roleValidation.middleware";
 import { validateJwt } from "../security/middlewares/jwtValidation.middleware";
-import { createRoomSchema, getRoomByIdSchema } from "../security/schemas/room.schema";
+import { createRoomSchema, getRoomByIdSchema, updateRoomSchema } from "../security/schemas/room.schema";
 import { prisma } from "../../prisma/prisma";
 import { StudentService } from "../services/students.service";
 
@@ -120,7 +120,7 @@ export function RoomController(app: FastifyInstance, io: any) {
         { 
             preHandler: [ 
                 validatePayload(getRoomByIdSchema, "params"),
-                validatePayload(createRoomSchema, "body"),
+                validatePayload(updateRoomSchema, "body"),
                 validateJwt(),
                 validateRole("room.update")
             ] 

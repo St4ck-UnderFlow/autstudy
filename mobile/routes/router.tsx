@@ -5,6 +5,7 @@ import { SignUp } from '../screen/SignUp';
 import { Home } from '../screen/Home';
 import { NewRoom } from '../screen/NewRoom';
 import { RoomChat } from '../screen/RoomChat';
+import { UpdateRoom } from '../screen/UpdateRoom';
 
 const Stack = createStackNavigator();
 
@@ -13,6 +14,12 @@ export function Router() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="SignIn">
+
+        <Stack.Screen 
+          name="Home" 
+          component={Home} 
+        />
+
         <Stack.Screen 
           name="SignIn" 
           component={SignIn} 
@@ -35,10 +42,11 @@ export function Router() {
           component={RoomChat} 
         />
 
-        <Stack.Screen 
-          name="Home" 
-          component={Home} 
+        <Stack.Screen   
+          name="UpdateRoom" 
+          component={UpdateRoom} 
         />
+
       </Stack.Navigator>
     </NavigationContainer>
   );

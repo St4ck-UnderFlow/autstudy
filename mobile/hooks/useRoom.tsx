@@ -91,11 +91,46 @@ export function useRoom() {
         }
     }
 
+    async function updateRoom(params: { id: string, title: string }) {
+        try {
+            const response = await axios.put(
+                `${ENDPOINT}/${params.id}`, 
+                { title: params.title },
+                {
+                    headers: {
+                        Authorization: `Bearer ${getToken()}`
+                    }
+                }
+            );
+            return response.data;
+        } catch (error) {
+            throw new Error('Erro during room updating');
+        }
+    }
+
+    async function getRoomById(id: string) {
+        try {
+            const response = await axios.get(
+                `${ENDPOINT}/${id}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${getToken()}`
+                    }
+                }
+            );
+            return response.data;
+        } catch (error) {
+            throw new Error('Erro on getting room by id');
+        }
+    }
+
     return {
         createNewRoom,
         getRooms,
         getRoomMessages,
-        deleteRoom
+        deleteRoom,
+        updateRoom,
+        getRoomById
     }
 
 }

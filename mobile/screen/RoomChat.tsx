@@ -3,24 +3,32 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, FlatList, Keyboard
 import { Pencil, Send, Trash } from 'lucide-react-native';
 import { ButtonStyle } from '../styles/Button.style';
 import { InputStyle } from '../styles/Input.style';
-import { useNavigation } from '@react-navigation/native';
 import { io } from 'socket.io-client';
 import { useToken } from '../hooks/useToken';
 import { useRoom } from '../hooks/useRoom';
 
 const socket = io('http://localhost:3333');
 
-export function RoomChat({ route }: any) {
+export function RoomChat({ route, navigation }: any) {
   const { roomId, roomTitle } = route.params;
 
-  const navigation = useNavigation();
+
   const { decodeToken, getToken, hasRoleInToken } = useToken();
 
-  const [message, setMessage] = useState('');
-  const [messages, setMessages] = useState<any[]>([]);
-  const [currentUserId, setCurrentUserId] = useState('');
+  const [ message, setMessage ] = useState('');
+  const [ messages, setMessages ] = useState<any[]>([]);
+  const [ currentUserId, setCurrentUserId ] = useState('');
 
   const { getRoomMessages, deleteRoom } = useRoom();
+
+  async function handleDeleteRoom() {
+    await deleteRoom(roomId);
+    navigation.navigate('Home' as never);
+  }
+
+  function handleUpdateRoom() {
+    navigation.navigate('UpdateRoom', { roomId, roomTitle });
+  }
 
   function setHeaderOptions() {
     navigation.setOptions({
@@ -33,7 +41,8 @@ export function RoomChat({ route }: any) {
             return (
               <View style={{ display: 'flex', flexDirection: 'row',alignItems: 'center', gap: 4 }}>
                 <TouchableOpacity 
-                style={{marginRight: 16}}
+                  style={{marginRight: 16}}
+                  onPress={handleUpdateRoom}
                 >
                   <Pencil 
                     size={20} 
@@ -61,11 +70,6 @@ export function RoomChat({ route }: any) {
     if (allMessages.length > 0) {
       setMessages(allMessages);
     }
-  }
-
-  async function handleDeleteRoom() {
-    await deleteRoom(roomId);
-    navigation.navigate('Home' as never);
   }
 
   useEffect(() => {
