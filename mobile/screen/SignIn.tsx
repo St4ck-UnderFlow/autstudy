@@ -1,18 +1,24 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { useUser } from '../hooks/useUser';
 import { ButtonStyle } from '../styles/Button.style';
 import { InputStyle } from '../styles/Input.style';
 import { TextStyle } from '../styles/Text.style';
+import { useToken } from '../hooks/useToken';
 
 export function SignIn({navigation}: {navigation: any}) {
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [ email, setEmail ] = useState('');
+  const [ password, setPassword ] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const { signIn } = useUser();
+  const { getToken } = useToken();
 
-  const [errorMessage, setErrorMessage] = useState('');
+  useEffect(() => {
+    const isUserLoggedIn = getToken() !== null;
+    if (isUserLoggedIn) navigation.navigate('Home');
+  }, [])
 
   async function handleLogin() {
     try {
@@ -20,7 +26,6 @@ export function SignIn({navigation}: {navigation: any}) {
       navigation.navigate('Home');
     } catch (error) {
       setErrorMessage('Erro ao fazer login');
-      Alert.alert('Erro ao fazer login');
     }
   };
 

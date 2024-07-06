@@ -15,7 +15,7 @@ export function useToken() {
     function getToken() {
       try {
         const token = window.localStorage.getItem('token');
-        return token || '';
+        return token;
       } catch (error) {
         console.log('Erro ao buscar token');
       }

@@ -1,22 +1,57 @@
 import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, FlatList } from 'react-native';
 import { TextStyle } from '../styles/Text.style';
 import { RoomCard } from '../components/RoomCard';
-import { Plus } from 'lucide-react-native';
+import { LogOut, Plus } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
 import { useRoom } from '../hooks/useRoom';
+import { useToken } from '../hooks/useToken';
+import { useUser } from '../hooks/useUser';
 
 export function Home({navigation}: {navigation: any}) {
 
     const [ rooms, setRooms ] = useState<any[]>([])
 
     const { getRooms } = useRoom();
+    const { getToken, decodeToken } = useToken();
+    const { signOut } = useUser();
+
+    function handleSignOut() {
+        signOut();
+        navigation.navigate('SignIn');
+    }
 
     async function loadRooms() {
         const allRooms = await getRooms();
         setRooms(allRooms);
     }
 
+    function setHeaderOptions() {
+        const token = getToken();
+        if (!token) return;
+
+        const tokenDecoded = decodeToken(token);
+
+        navigation.setOptions({
+            headerTitle: `Olá, ${tokenDecoded?.name}`,
+            headerTitleStyle: {
+                fontWeight: '500',
+            },
+            headerRight: () => (
+                <TouchableOpacity 
+                  onPress={handleSignOut}
+                  style={{marginRight: 16}}
+                >
+                  <LogOut 
+                    size={20} 
+                    color='red' 
+                  /> 
+                </TouchableOpacity>
+            )
+        });
+    }
+
     useEffect(() => {
+        setHeaderOptions();
         loadRooms();
     }, [])
 
