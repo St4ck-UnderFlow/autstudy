@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, FlatList } from
 import { TextStyle } from '../styles/Text.style';
 import { RoomCard } from '../components/RoomCard';
 import { LogOut, Plus } from 'lucide-react-native';
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { useRoom } from '../hooks/useRoom';
 import { useToken } from '../hooks/useToken';
 import { useUser } from '../hooks/useUser';
@@ -12,7 +12,7 @@ export function Home({navigation}: {navigation: any}) {
     const [ rooms, setRooms ] = useState<any[]>([])
 
     const { getRooms } = useRoom();
-    const { getToken, decodeToken } = useToken();
+    const { getToken, decodeToken, hasRoleInToken } = useToken();
     const { signOut } = useUser();
 
     function handleSignOut() {
@@ -61,14 +61,18 @@ export function Home({navigation}: {navigation: any}) {
                 <Text style={{...TextStyle.text, fontWeight: 'bold', fontSize: 20}}>
                     Salas
                 </Text>
-                <TouchableOpacity
-                    onPress={() => { navigation.navigate('NewRoom') }}
-                >
-                    <Plus 
-                        size={20} 
-                        color='black'
-                    />
-                </TouchableOpacity>
+                {
+                    hasRoleInToken('room.create') && (
+                        <TouchableOpacity
+                            onPress={() => { navigation.navigate('NewRoom') }}
+                        >
+                            <Plus 
+                                size={20} 
+                                color='black'
+                            />
+                        </TouchableOpacity>
+                    )
+                }
             </View>
             <SafeAreaView>
                 <FlatList
