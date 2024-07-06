@@ -38,6 +38,23 @@ export function useToken() {
             return null;
         }
     };
+
+    function hasRoleInToken(roleName: string) {
+      const token = getToken();
+      if (!token) return false;
+
+      const tokeDecoded = decodeToken(token);
+      if (!tokeDecoded) return false;
+
+      const roles = tokeDecoded.roles;
+      return roles.includes(roleName);
+    }
   
-    return { setTokenValue, getToken, removeToken, decodeToken };
+    return { 
+      setTokenValue, 
+      getToken, 
+      removeToken, 
+      decodeToken,
+      hasRoleInToken 
+    };
 }

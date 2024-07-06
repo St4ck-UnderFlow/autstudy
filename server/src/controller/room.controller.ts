@@ -151,16 +151,9 @@ export function RoomController(app: FastifyInstance, io: any) {
         },
         async (request: FastifyRequest, reply: FastifyReply) => {
         try {
-            const paramsSchema = z.object({
-                id: z.string().uuid()
-            })
-    
-            const { id } = paramsSchema.parse(request.params);
-
+            const { id } = request.params as { id: string };
             await roomService.delete(id);
-
             reply.status(204).send();
-
         } catch (error) {
             reply.status(404).send(error);
         }

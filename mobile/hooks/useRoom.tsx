@@ -75,10 +75,27 @@ export function useRoom() {
         }
     }
 
+    async function deleteRoom(roomId: string) {
+        try {
+            const response = await axios.delete(
+                `${ENDPOINT}/${roomId}`, 
+                {
+                    headers: {
+                        Authorization: `Bearer ${getToken()}`
+                    }
+                }
+            );
+            return response.data;
+        } catch (error) {
+            throw new Error('Erro during room deleting');
+        }
+    }
+
     return {
         createNewRoom,
         getRooms,
-        getRoomMessages
+        getRoomMessages,
+        deleteRoom
     }
 
 }

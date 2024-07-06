@@ -67,13 +67,6 @@ export class RoomService {
     };
 
     async delete(id: string) {
-        const hasRoomSaved = await prisma.room.findUnique({
-            where: { id }
-        })
-        if (!hasRoomSaved) {
-            throw new Error('Room not found')
-        }
-
         await prisma.room.delete({
             where: { id }
         })

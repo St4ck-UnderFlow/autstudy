@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, FlatList, KeyboardAvoidingView } from 'react-native';
-import { Send } from 'lucide-react-native';
+import { Pencil, Send, Trash } from 'lucide-react-native';
 import { ButtonStyle } from '../styles/Button.style';
 import { InputStyle } from '../styles/Input.style';
 import { useNavigation } from '@react-navigation/native';
@@ -14,13 +14,47 @@ export function RoomChat({ route }: any) {
   const { roomId, roomTitle } = route.params;
 
   const navigation = useNavigation();
-  const { decodeToken, getToken } = useToken();
+  const { decodeToken, getToken, hasRoleInToken } = useToken();
 
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<any[]>([]);
   const [currentUserId, setCurrentUserId] = useState('');
 
-  const { getRoomMessages } = useRoom();
+  const { getRoomMessages, deleteRoom } = useRoom();
+
+  function setHeaderOptions() {
+    navigation.setOptions({
+        headerTitle: roomTitle,
+        headerTitleStyle: {
+          fontWeight: '500',
+        },
+        headerRight: () => {
+          if (hasRoleInToken('room.delete') && hasRoleInToken('room.update')) {
+            return (
+              <View style={{ display: 'flex', flexDirection: 'row',alignItems: 'center', gap: 4 }}>
+                <TouchableOpacity 
+                style={{marginRight: 16}}
+                >
+                  <Pencil 
+                    size={20} 
+                    color='blue' 
+                  /> 
+                </TouchableOpacity>
+                <TouchableOpacity 
+                  onPress={handleDeleteRoom}
+                  style={{marginRight: 16}}
+                >
+                  <Trash 
+                    size={20} 
+                    color='red' 
+                  /> 
+                </TouchableOpacity>
+              </View>
+            )
+          }
+        }
+    });
+  }
 
   async function loadRoomMessages() {
     const allMessages = await getRoomMessages(roomId);
@@ -29,10 +63,14 @@ export function RoomChat({ route }: any) {
     }
   }
 
+  async function handleDeleteRoom() {
+    await deleteRoom(roomId);
+    navigation.navigate('Home' as never);
+  }
+
   useEffect(() => {
-    navigation.setOptions({
-      headerTitle: roomTitle,
-    });
+
+    setHeaderOptions()
 
     const tokenDecoded = decodeToken(getToken() || '');
     setCurrentUserId((tokenDecoded as any).sub);
