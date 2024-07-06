@@ -5,6 +5,8 @@ import { createTeacherSchema, getTeacherByIdSchema } from "../security/schemas/t
 import { Teacher } from "../types/teacher.type";
 import { z } from "zod";
 import { UserService } from "../services/user.service";
+import { validateJwt } from "../security/middlewares/jwtValidation.middleware";
+import { validateRole } from "../security/middlewares/roleValidation.middleware";
 
 const teacherService = new TeacherService();
 const userService = new UserService();
@@ -13,7 +15,11 @@ export function TeacherController(app: FastifyInstance) {
 
     app.post(
         '/teachers', 
-        { preHandler: validatePayload(createTeacherSchema, "body") },
+        { 
+            preHandler: [
+                validatePayload(createTeacherSchema, "body") 
+            ]
+        },
         async (request: FastifyRequest, reply: FastifyReply) => {
             try {
                 await teacherService.save(request.body as Teacher);
@@ -35,7 +41,11 @@ export function TeacherController(app: FastifyInstance) {
 
     app.get(
         '/teachers/:id', 
-        { preHandler: validatePayload(getTeacherByIdSchema, "body") },
+        { 
+            preHandler: [
+                validatePayload(getTeacherByIdSchema, "body") 
+            ]
+        },
         async (request: FastifyRequest, reply: FastifyReply) => {
             try {
                 const teacher = await teacherService.getById(request.params as string);
@@ -51,7 +61,9 @@ export function TeacherController(app: FastifyInstance) {
         { 
             preHandler: [ 
                 validatePayload(getTeacherByIdSchema, "params"), 
-                validatePayload(createTeacherSchema, "body")
+                validatePayload(createTeacherSchema, "body"),
+                validateJwt(),
+                validateRole("teacher.update")
             ] 
         },
         async (request: FastifyRequest, reply: FastifyReply) => {
@@ -68,7 +80,16 @@ export function TeacherController(app: FastifyInstance) {
         }
     )
 
-    app.delete('/teachers/:id', async (request: FastifyRequest, reply: FastifyReply) => {
+    app.delete('/teachers/:id',
+        { 
+            preHandler: [ 
+                validatePayload(getTeacherByIdSchema, "params"), 
+                validatePayload(createTeacherSchema, "body"),
+                validateJwt(),
+                validateRole("teacher.delete")
+            ] 
+        },
+        async (request: FastifyRequest, reply: FastifyReply) => {
         try {
             const paramsSchema = z.object({
                 id: z.string().uuid()

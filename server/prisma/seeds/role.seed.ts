@@ -23,6 +23,28 @@ let roomRoles = [
     },
 ]
 
+let studentRoles = [
+    {
+        name: 'student.update',
+        userTypes: ['STUDENT']
+    },
+    {
+        name: 'student.delete',
+        userTypes: ['STUDENT']
+    },
+]
+
+let teacherRoles = [
+    {
+        name: 'teacher.update',
+        userTypes: ['TEACHER']
+    },
+    {
+        name: 'teacher.delete',
+        userTypes: ['TEACHER']
+    },
+]
+
 
 export async function RoleSeed() {
     const roles = await prisma.role.findMany();
@@ -34,7 +56,7 @@ export async function RoleSeed() {
     }
 
     await prisma.role.createMany({
-       data: roomRoles as any
+       data: [...roomRoles, ...studentRoles, ...teacherRoles] as any
     });
 
     console.log('ROLE SEED (EXECUTED)');

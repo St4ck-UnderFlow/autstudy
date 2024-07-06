@@ -5,6 +5,8 @@ import { createStudentSchema, getStudentByIdSchema } from "../security/schemas/s
 import { validatePayload } from "../security/middlewares/payloadValidation.middleware";
 import { Student } from "../types/student.type";
 import { UserService } from "../services/user.service";
+import { validateJwt } from "../security/middlewares/jwtValidation.middleware";
+import { validateRole } from "../security/middlewares/roleValidation.middleware";
 
 const studentService = new StudentService();
 const userService = new UserService();
@@ -13,7 +15,11 @@ export function StudentController(app: FastifyInstance) {
 
     app.post(
         '/students', 
-        { preHandler: validatePayload(createStudentSchema, "body") },
+        { 
+            preHandler: [
+                validatePayload(createStudentSchema, "body")
+            ]
+        },
         async (request: FastifyRequest, reply: FastifyReply) => {
             try {
                 await studentService.save(request.body as Student);
@@ -51,7 +57,9 @@ export function StudentController(app: FastifyInstance) {
         { 
             preHandler: [ 
                 validatePayload(getStudentByIdSchema, "params"), 
-                validatePayload(createStudentSchema, "body")
+                validatePayload(createStudentSchema, "body"),
+                validateJwt(),
+                validateRole("student.update")
             ] 
         },
         async (request: FastifyRequest, reply: FastifyReply) => {
@@ -66,7 +74,15 @@ export function StudentController(app: FastifyInstance) {
         }
     )
 
-    app.delete('/students/:id', async (request: FastifyRequest, reply: FastifyReply) => {
+    app.delete(
+        '/students/:id', 
+        {
+            preHandler: [
+                validateJwt(),
+                validateRole("student.delete"),
+            ]
+        },
+        async (request: FastifyRequest, reply: FastifyReply) => {
         try {
             const paramsSchema = z.object({
                 id: z.string().uuid()
