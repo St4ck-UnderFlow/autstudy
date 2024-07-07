@@ -38,6 +38,7 @@ export function RoomController(app: FastifyInstance, io: any) {
 
                 reply.status(201).send(newRoom);
             } catch (error) {
+                console.log(error);
                 reply.status(500).send(error);
             }
         }

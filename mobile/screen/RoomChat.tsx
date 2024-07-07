@@ -6,8 +6,9 @@ import { InputStyle } from '../styles/Input.style';
 import { io } from 'socket.io-client';
 import { useToken } from '../hooks/useToken';
 import { useRoom } from '../hooks/useRoom';
+import { dev_environments } from '../environments/dev.environments';
 
-const socket = io('http://localhost:3333');
+const socket = io(dev_environments.API_BASE_URL);
 
 export function RoomChat({ route, navigation }: any) {
   const { roomId, roomTitle } = route.params;
@@ -18,6 +19,9 @@ export function RoomChat({ route, navigation }: any) {
   const [ message, setMessage ] = useState('');
   const [ messages, setMessages ] = useState<any[]>([]);
   const [ currentUserId, setCurrentUserId ] = useState('');
+
+  const [ canDeleteRoom, setCanDeleteRoom ] = useState(false);
+  const [ canEditRoom, setCanEditRoom ] = useState(false);
 
   const { getRoomMessages, deleteRoom } = useRoom();
 
@@ -30,6 +34,14 @@ export function RoomChat({ route, navigation }: any) {
     navigation.navigate('UpdateRoom', { roomId, roomTitle });
   }
 
+  async function checkCanDeleteAndEditRoom() {
+    const canEdit = await hasRoleInToken('room.update');
+    const canDelete = await hasRoleInToken('room.delete');
+
+    setCanDeleteRoom(canDelete);
+    setCanEditRoom(canEdit);
+  }
+
   function setHeaderOptions() {
     navigation.setOptions({
         headerTitle: roomTitle,
@@ -37,7 +49,7 @@ export function RoomChat({ route, navigation }: any) {
           fontWeight: '500',
         },
         headerRight: () => {
-          if (hasRoleInToken('room.delete') && hasRoleInToken('room.update')) {
+          if (canDeleteRoom && canEditRoom) {
             return (
               <View style={{ display: 'flex', flexDirection: 'row',alignItems: 'center', gap: 4 }}>
                 <TouchableOpacity 
@@ -72,15 +84,18 @@ export function RoomChat({ route, navigation }: any) {
     }
   }
 
-  useEffect(() => {
-
-    setHeaderOptions()
-
-    const tokenDecoded = decodeToken(getToken() || '');
+  async function handleDecodeToken() {
+    const token = await getToken();
+    const tokenDecoded = decodeToken(token || '');
     setCurrentUserId((tokenDecoded as any).sub);
+  }
+
+  useEffect(() => {
+    setHeaderOptions();
+    checkCanDeleteAndEditRoom();
+    handleDecodeToken();
 
     socket.emit('joinRoom', roomId);
-
     loadRoomMessages();
 
     socket.on('chatMessage', (message) => {

@@ -1,32 +1,31 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useState } from "react";
 import { jwtDecode } from 'jwt-decode';
 import { Token } from "../types/token.type";
 
 export function useToken() {
-    function setTokenValue(value: string) {
+    async function setTokenValue(value: string) {
         try {
-            window.localStorage.setItem('token', value);
+            await AsyncStorage.setItem('token', value);
         } catch (error) {
-          console.log('Erro ao salvar token');
+            console.log('Erro ao salvar token');
         }
-      }
-  
-    function getToken() {
-      try {
-        const token = window.localStorage.getItem('token');
-        return token;
-      } catch (error) {
-        console.log('Erro ao buscar token');
-      }
     }
-  
-    function removeToken() {
-      try {
-        window.localStorage.removeItem('token');
-      } catch (error) {
-        console.log('Erro ao remover token');
-      }
+
+    async function getToken() {
+        try {
+            const token = await AsyncStorage.getItem('token');
+            return token;
+        } catch (error) {
+            console.log('Erro ao buscar token');
+        }
+    }
+
+    async function removeToken() {
+        try {
+            await AsyncStorage.removeItem('token');
+        } catch (error) {
+            console.log('Erro ao remover token');
+        }
     }
 
     function decodeToken(token: string): Token | null {
@@ -37,24 +36,24 @@ export function useToken() {
             console.error('Erro ao decodificar o token', error);
             return null;
         }
-    };
-
-    function hasRoleInToken(roleName: string) {
-      const token = getToken();
-      if (!token) return false;
-
-      const tokeDecoded = decodeToken(token);
-      if (!tokeDecoded) return false;
-
-      const roles = tokeDecoded.roles;
-      return roles.includes(roleName);
     }
-  
+
+    async function hasRoleInToken(roleName: string) {
+        const token = await getToken();
+        if (!token) return false;
+
+        const tokenDecoded = decodeToken(token);
+        if (!tokenDecoded) return false;
+
+        const roles = tokenDecoded.roles;
+        return roles.includes(roleName);
+    }
+
     return { 
-      setTokenValue, 
-      getToken, 
-      removeToken, 
-      decodeToken,
-      hasRoleInToken 
+        setTokenValue, 
+        getToken, 
+        removeToken, 
+        decodeToken, 
+        hasRoleInToken 
     };
 }

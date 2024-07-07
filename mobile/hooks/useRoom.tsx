@@ -1,7 +1,6 @@
 import axios from "axios";
 import { dev_environments } from "../environments/dev.environments";
 import { useToken } from "./useToken";
-import { SupportLevel } from "../types/student.type";
 
 export function useRoom() {
 
@@ -10,32 +9,39 @@ export function useRoom() {
     const { getToken, decodeToken } = useToken();
 
     async function createNewRoom(data: { title: string, classSupportLevel: string }) {
+        const token = await getToken();
+
         try {
             const response = await axios.post(
                 ENDPOINT, 
                 data,
                 {
                     headers: {
-                        Authorization: `Bearer ${getToken()}`
+                        Authorization: `Bearer ${token}`
                     }
                 }
             );
             return response.data;
         } catch (error) {
+            console.log(error)
             throw new Error('Erro during room creation');
         }
     }
 
     async function getRooms() {
         try {
-            const tokenDecoded = decodeToken(getToken() || '');
+            const token = await getToken();
+
+            if (!token) return;
+
+            const tokenDecoded = decodeToken(token);
             if (tokenDecoded?.userType === 'STUDENT') {
                 console.log('student aqui')
                 const response = await axios.get(
                     `${ENDPOINT}/supportLevel`, 
                     {
                         headers: {
-                            Authorization: `Bearer ${getToken()}`
+                            Authorization: `Bearer ${token}`
                         }
                     }
                 );
@@ -47,7 +53,7 @@ export function useRoom() {
                 ENDPOINT, 
                 {
                     headers: {
-                        Authorization: `Bearer ${getToken()}`
+                        Authorization: `Bearer ${token}`
                     }
                 }
             );

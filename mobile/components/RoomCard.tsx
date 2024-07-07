@@ -45,9 +45,10 @@ const styles = StyleSheet.create({
         gap: 12
     },
     avatar: {
-        padding: 16,
         borderRadius: 16,
         backgroundColor: primaryColor,
+        height: 49,
+        width: 50.8,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'

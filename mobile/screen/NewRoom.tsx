@@ -21,6 +21,7 @@ export function NewRoom({navigation}: {navigation: any}) {
             console.log(newRoom)
             navigation.navigate('RoomChat', { roomId: newRoom.id, roomTitle: newRoom.title });
         } catch (error) {
+            console.log(error)
             setErrorMessage('Erro ao criar uma nova sala');
         }
     }

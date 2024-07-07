@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, FlatList } from 'react-native';
 import { TextStyle } from '../styles/Text.style';
 import { RoomCard } from '../components/RoomCard';
-import { LogOut, Plus } from 'lucide-react-native';
+import { LogOut, Plus, RefreshCcw } from 'lucide-react-native';
 import { useLayoutEffect, useState } from 'react';
 import { useRoom } from '../hooks/useRoom';
 import { useToken } from '../hooks/useToken';
@@ -10,6 +10,8 @@ import { useUser } from '../hooks/useUser';
 export function Home({navigation}: {navigation: any}) {
 
     const [ rooms, setRooms ] = useState<any[]>([])
+
+    const [ canCreateRoom, setCanCreateRoom ] = useState(false);
 
     const { getRooms } = useRoom();
     const { getToken, decodeToken, hasRoleInToken } = useToken();
@@ -25,8 +27,8 @@ export function Home({navigation}: {navigation: any}) {
         setRooms(allRooms);
     }
 
-    function setHeaderOptions() {
-        const token = getToken();
+    async function setHeaderOptions() {
+        const token = await getToken();
         if (!token) return;
 
         const tokenDecoded = decodeToken(token);
@@ -50,8 +52,14 @@ export function Home({navigation}: {navigation: any}) {
         });
     }
 
+    async function checkCanCreateRoom() {
+        const can = await hasRoleInToken('room.create');
+        setCanCreateRoom(can);
+    }
+
     useLayoutEffect(() => {
         setHeaderOptions();
+        checkCanCreateRoom()
         loadRooms();
     }, [])
 
@@ -61,18 +69,28 @@ export function Home({navigation}: {navigation: any}) {
                 <Text style={{...TextStyle.text, fontWeight: 'bold', fontSize: 20}}>
                     Salas
                 </Text>
-                {
-                    hasRoleInToken('room.create') && (
-                        <TouchableOpacity
-                            onPress={() => { navigation.navigate('NewRoom') }}
-                        >
-                            <Plus 
-                                size={20} 
-                                color='black'
-                            />
-                        </TouchableOpacity>
-                    )
-                }
+                <View style={{display: 'flex', flexDirection: 'row', gap: 14, alignItems: 'center'}}>
+                    {
+                        canCreateRoom && (
+                            <TouchableOpacity
+                                onPress={() => { navigation.navigate('NewRoom') }}
+                            >
+                                <Plus 
+                                    size={25} 
+                                    color='blue'
+                                />
+                            </TouchableOpacity>
+                        )
+                    }
+                    <TouchableOpacity
+                        onPress={loadRooms}
+                    >
+                        <RefreshCcw 
+                            size={20} 
+                            color='blue'
+                        />
+                    </TouchableOpacity>
+                </View>
             </View>
             <SafeAreaView>
                 <FlatList
