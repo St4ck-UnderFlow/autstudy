@@ -11,6 +11,7 @@ import { SupportLevelSelect } from '../components/SupportLevelSelect';
 import { DegreeLevelSelect } from '../components/DegreeLevelSelect';
 import { SupportLevel } from '../types/student.type';
 import { DegreeLevel } from '../types/teacher.type';
+import RNPickerSelect from 'react-native-picker-select';
 
 export function SignUp({navigation}: {navigation: any}) {
 
@@ -112,16 +113,16 @@ export function SignUp({navigation}: {navigation: any}) {
           secureTextEntry
           autoCapitalize="none"
         />
-        <View style={PickerStyle.pickerContainer}>
-          <Picker
-            selectedValue={userType}
-            onValueChange={(itemValue) => setUserType(itemValue)}
-            style={PickerStyle.picker}
-          >
-            <Picker.Item label="Selecione o tipo de usuário" value="" />
-            <Picker.Item label="Estudante" value="STUDENT" />
-            <Picker.Item label="Professor(a)" value="TEACHER" />
-          </Picker>
+        <View>
+            <RNPickerSelect
+                onValueChange={(itemValue) => setUserType(itemValue)}
+                items={[
+                  { label: "Estudante", value: "STUDENT" },
+                  { label: "Professor(a)", value: "TEACHER" }
+                ]}
+                style={pickerSelectStyles}
+                placeholder={{ label: "Selecione o tipo de usuário", value: "" }}
+            />
         </View>
 
         {userType === 'TEACHER' && <DegreeLevelSelect onSelectFn={(itemValue) => setDegreeLevel(itemValue)} />}
@@ -151,4 +152,27 @@ const styles = StyleSheet.create({
     gap: 12,
     paddingHorizontal: 16,
   }
+});
+
+const pickerSelectStyles = StyleSheet.create({
+  inputIOS: {
+      fontSize: 16,
+      paddingVertical: 12,
+      paddingHorizontal: 10,
+      borderWidth: 1,
+      borderColor: 'gray',
+      borderRadius: 4,
+      color: 'black',
+      paddingRight: 30, // para garantir que o texto não colida com o ícone de dropdown
+  },
+  inputAndroid: {
+      fontSize: 16,
+      paddingHorizontal: 10,
+      paddingVertical: 8,
+      borderWidth: 0.5,
+      borderColor: 'purple',
+      borderRadius: 8,
+      color: 'black',
+      paddingRight: 30, // para garantir que o texto não colida com o ícone de dropdown
+  },
 });

@@ -20,7 +20,6 @@ export function DegreeLevelSelect(props: DegreeLevelSelectProps) {
             <Picker.Item label="Doutor" value="PHD" />
             <Picker.Item label="Pós-Doutor" value="POSTDOC" />
             <Picker.Item label="Licenciado" value="BACHELORS" />
-
           </Picker>
         </View>
     )
