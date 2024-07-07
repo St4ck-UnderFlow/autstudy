@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
 import { useUser } from '../hooks/useUser';
 import { SignUpUser, UserType } from '../types/user.type';
 import { TextStyle } from '../styles/Text.style';
 import { InputStyle } from '../styles/Input.style';
-import { PickerStyle } from '../styles/Picker.style';
 import { ButtonStyle } from '../styles/Button.style';
 import { SupportLevelSelect } from '../components/SupportLevelSelect';
 import { DegreeLevelSelect } from '../components/DegreeLevelSelect';
@@ -64,8 +62,9 @@ export function SignUp({navigation}: {navigation: any}) {
       }
     }
 
-    if (!validFields()) {
+    if (validFields() === false) {
       setErrorMessage('Preencha todos os campos');
+      return;
     }
 
     try {

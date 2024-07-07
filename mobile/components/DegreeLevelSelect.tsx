@@ -1,7 +1,6 @@
-import { View } from "react-native";
-import { PickerStyle } from "../styles/Picker.style";
-import { Picker } from "@react-native-picker/picker";
+import { View, StyleSheet } from "react-native";
 import { DegreeLevel } from "../types/teacher.type";
+import RNPickerSelect from 'react-native-picker-select';
 
 interface DegreeLevelSelectProps {
     onSelectFn: (itemValue: DegreeLevel) => void;
@@ -9,18 +8,41 @@ interface DegreeLevelSelectProps {
 
 export function DegreeLevelSelect(props: DegreeLevelSelectProps) {
     return (
-        <View style={PickerStyle.pickerContainer}>
-          <Picker
+      <View>
+        <RNPickerSelect
             onValueChange={(itemValue: DegreeLevel) => props.onSelectFn(itemValue)}
-            style={PickerStyle.picker}
-          >
-            <Picker.Item label="Selecione o Grau de Formação" value="" />
-            <Picker.Item label="Bacharel" value="BACHELORS" />
-            <Picker.Item label="Mestre" value="MASTERS" />
-            <Picker.Item label="Doutor" value="PHD" />
-            <Picker.Item label="Pós-Doutor" value="POSTDOC" />
-            <Picker.Item label="Licenciado" value="BACHELORS" />
-          </Picker>
-        </View>
+            items={[
+              { label: "Bacharel", value: "BACHELORS" },
+              { label: "Mestre", value: "MASTERS" },
+              { label: "Doutor", value: "PHD" },
+              { label: "Pós-Doutor", value: "POSTDOC" },
+            ]}
+            style={pickerSelectStyles}
+            placeholder={{ label: "Selecione o Grau de Formação", value: "" }}
+        />
+    </View>
     )
 }
+
+const pickerSelectStyles = StyleSheet.create({
+  inputIOS: {
+      fontSize: 16,
+      paddingVertical: 12,
+      paddingHorizontal: 10,
+      borderWidth: 1,
+      borderColor: 'gray',
+      borderRadius: 4,
+      color: 'black',
+      paddingRight: 30, 
+  },
+  inputAndroid: {
+      fontSize: 16,
+      paddingHorizontal: 10,
+      paddingVertical: 8,
+      borderWidth: 0.5,
+      borderColor: 'purple',
+      borderRadius: 8,
+      color: 'black',
+      paddingRight: 30, 
+  },
+});

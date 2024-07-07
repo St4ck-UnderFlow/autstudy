@@ -25,9 +25,7 @@ export function SupportLevelSelect(props: SupportLevelSelectProps) {
 }
 
 const styles = StyleSheet.create({
-    pickerContainer: {
-        // Adicione seus estilos aqui
-    }
+    pickerContainer: { }
 });
 
 const pickerSelectStyles = StyleSheet.create({
@@ -39,7 +37,7 @@ const pickerSelectStyles = StyleSheet.create({
         borderColor: 'gray',
         borderRadius: 4,
         color: 'black',
-        paddingRight: 30, // para garantir que o texto não colida com o ícone de dropdown
+        paddingRight: 30, 
     },
     inputAndroid: {
         fontSize: 16,
@@ -49,6 +47,6 @@ const pickerSelectStyles = StyleSheet.create({
         borderColor: 'purple',
         borderRadius: 8,
         color: 'black',
-        paddingRight: 30, // para garantir que o texto não colida com o ícone de dropdown
+        paddingRight: 30, 
     },
 });
