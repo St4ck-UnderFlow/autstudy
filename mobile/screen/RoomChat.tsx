@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, FlatList, KeyboardAvoidingView } from 'react-native';
 import { Pencil, Send, Trash } from 'lucide-react-native';
 import { ButtonStyle } from '../styles/Button.style';
@@ -11,18 +11,18 @@ import { dev_environments } from '../environments/dev.environments';
 const socket = io(dev_environments.API_BASE_URL);
 
 export function RoomChat({ route, navigation }: any) {
+
   const { roomId, roomTitle } = route.params;
-
-
-  const { decodeToken, getToken, hasRoleInToken } = useToken();
 
   const [ message, setMessage ] = useState('');
   const [ messages, setMessages ] = useState<any[]>([]);
   const [ currentUserId, setCurrentUserId ] = useState('');
+  
+  const [ canDeleteRoom, setCanDeleteRoom ] = useState<boolean>(false);
+  const [ canEditRoom, setCanEditRoom ] = useState<boolean>(false);
+  const [ loading, setLoading ] = useState<boolean>(true);
 
-  const [ canDeleteRoom, setCanDeleteRoom ] = useState(false);
-  const [ canEditRoom, setCanEditRoom ] = useState(false);
-
+  const { decodeToken, getToken, hasRoleInToken } = useToken();
   const { getRoomMessages, deleteRoom } = useRoom();
 
   async function handleDeleteRoom() {
@@ -40,40 +40,42 @@ export function RoomChat({ route, navigation }: any) {
 
     setCanDeleteRoom(canDelete);
     setCanEditRoom(canEdit);
+    setLoading(false);
   }
 
   function setHeaderOptions() {
     navigation.setOptions({
-        headerTitle: roomTitle,
-        headerTitleStyle: {
-          fontWeight: '500',
-        },
-        headerRight: () => {
-          if (canDeleteRoom && canEditRoom) {
-            return (
-              <View style={{ display: 'flex', flexDirection: 'row',alignItems: 'center', gap: 4 }}>
-                <TouchableOpacity 
-                  style={{marginRight: 16}}
-                  onPress={handleUpdateRoom}
-                >
-                  <Pencil 
-                    size={20} 
-                    color='blue' 
-                  /> 
-                </TouchableOpacity>
-                <TouchableOpacity 
-                  onPress={handleDeleteRoom}
-                  style={{marginRight: 16}}
-                >
-                  <Trash 
-                    size={20} 
-                    color='red' 
-                  /> 
-                </TouchableOpacity>
-              </View>
-            )
-          }
+      headerTitle: roomTitle,
+      headerTitleStyle: {
+        fontWeight: '500',
+      },
+      headerRight: () => {
+        if (!loading && canDeleteRoom && canEditRoom) {
+          return (
+            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+              <TouchableOpacity 
+                style={{marginRight: 16}}
+                onPress={handleUpdateRoom}
+              >
+                <Pencil 
+                  size={20} 
+                  color='blue' 
+                /> 
+              </TouchableOpacity>
+              <TouchableOpacity 
+                onPress={handleDeleteRoom}
+                style={{marginRight: 16}}
+              >
+                <Trash 
+                  size={20} 
+                  color='red' 
+                /> 
+              </TouchableOpacity>
+            </View>
+          );
         }
+        return null;
+      }
     });
   }
 
@@ -90,13 +92,10 @@ export function RoomChat({ route, navigation }: any) {
     setCurrentUserId((tokenDecoded as any).sub);
   }
 
-  useEffect(() => {
-    setHeaderOptions();
-    checkCanDeleteAndEditRoom();
+  useLayoutEffect(() => {
     handleDecodeToken();
-
-    socket.emit('joinRoom', roomId);
     loadRoomMessages();
+    socket.emit('joinRoom', roomId);
 
     socket.on('chatMessage', (message) => {
       setMessages((prevMessages) => [...prevMessages, message]);
@@ -105,14 +104,24 @@ export function RoomChat({ route, navigation }: any) {
     return () => {
       socket.off('chatMessage');
     };
-  }, []); 
+  }, [roomId]);
+
+  useLayoutEffect(() => {
+    checkCanDeleteAndEditRoom();
+  }, []);
+
+  useLayoutEffect(() => {
+    if (!loading) {
+      setHeaderOptions();
+    }
+  }, [canDeleteRoom, canEditRoom, loading]);
 
   function sendMessage() {
     if (message.trim() === '') {
       return;
     }
 
-    const newMessage = { roomId, senderId: currentUserId, content: message }
+    const newMessage = { roomId, senderId: currentUserId, content: message };
 
     socket.emit('chatMessage', newMessage);
     setMessage('');

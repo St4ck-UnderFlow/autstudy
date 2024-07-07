@@ -46,6 +46,9 @@ export function useToken() {
         if (!tokenDecoded) return false;
 
         const roles = tokenDecoded.roles;
+
+        console.log(roles.includes(roleName))
+
         return roles.includes(roleName);
     }
 

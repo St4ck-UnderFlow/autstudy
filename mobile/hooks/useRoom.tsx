@@ -83,11 +83,12 @@ export function useRoom() {
 
     async function deleteRoom(roomId: string) {
         try {
+            const token = await getToken()
             const response = await axios.delete(
                 `${ENDPOINT}/${roomId}`, 
                 {
                     headers: {
-                        Authorization: `Bearer ${getToken()}`
+                        Authorization: `Bearer ${token}`
                     }
                 }
             );
@@ -99,12 +100,14 @@ export function useRoom() {
 
     async function updateRoom(params: { id: string, title: string }) {
         try {
+            const token = await getToken();
+
             const response = await axios.put(
                 `${ENDPOINT}/${params.id}`, 
                 { title: params.title },
                 {
                     headers: {
-                        Authorization: `Bearer ${getToken()}`
+                        Authorization: `Bearer ${token}`
                     }
                 }
             );
