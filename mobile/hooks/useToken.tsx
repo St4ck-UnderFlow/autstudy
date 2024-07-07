@@ -52,11 +52,22 @@ export function useToken() {
         return roles.includes(roleName);
     }
 
+    async function getUserType() {
+        const token = await getToken();
+        if (!token) return false;
+
+        const tokenDecoded = decodeToken(token);
+        if (!tokenDecoded) return false;
+
+        return tokenDecoded.userType;
+    }
+
     return { 
         setTokenValue, 
         getToken, 
         removeToken, 
         decodeToken, 
-        hasRoleInToken 
+        hasRoleInToken,
+        getUserType
     };
 }

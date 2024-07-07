@@ -8,6 +8,8 @@ import { validateJwt } from "../security/middlewares/jwtValidation.middleware";
 import { createRoomSchema, getRoomByIdSchema, updateRoomSchema } from "../security/schemas/room.schema";
 import { prisma } from "../../prisma/prisma";
 import { StudentService } from "../services/students.service";
+import { TeacherService } from "../services/teacher.service";
+import { DegreeLevel } from "../types/enums.enum";
 
 
 const roomService = new RoomService();
@@ -69,7 +71,6 @@ export function RoomController(app: FastifyInstance, io: any) {
         },
         async (request: FastifyRequest, reply: FastifyReply) => {
             try {
-                console.log('aqui que eh aqui')
                 const tokenDecoded = await jwtService.decode(request);
 
                 const student = await studentService.getByUserId(tokenDecoded.sub);
@@ -81,6 +82,26 @@ export function RoomController(app: FastifyInstance, io: any) {
                     }
                 });
                 return roomsWithSupportLevel;
+            } catch (error) {
+                reply.status(404).send(error);
+            }
+        }
+    )
+
+    app.get('/rooms/degreeLevel/:degreeLevel',
+        {
+            preHandler: [
+                validateJwt(),
+                validateRole("room.list")
+            ]
+        },
+        async (request: FastifyRequest, reply: FastifyReply) => {
+            try {
+                const { degreeLevel } = request.params as { degreeLevel: DegreeLevel };
+
+                const roomsByDegreeLevel = await roomService.getByTeacherDegreelevel(degreeLevel);
+
+                reply.status(200).send(roomsByDegreeLevel);
             } catch (error) {
                 reply.status(404).send(error);
             }

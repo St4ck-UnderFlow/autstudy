@@ -1,6 +1,7 @@
 import axios from "axios";
 import { dev_environments } from "../environments/dev.environments";
 import { useToken } from "./useToken";
+import { DegreeLevel } from "../types/teacher.type";
 
 export function useRoom() {
 
@@ -61,6 +62,25 @@ export function useRoom() {
 
         } catch (error) {
             throw new Error('Erro during room listing');
+        }
+    }
+
+    async function getRoomsByDegreeLevel(degreeLevel: DegreeLevel) {
+        try {
+            const token = await getToken();
+
+            const response = await axios.get(
+                `${ENDPOINT}/degreeLevel/${degreeLevel}`, 
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+
+            return response.data;
+        } catch (error) {
+            throw new Error('Error During Rooms Listing by Degree Level');
         }
     }
 
@@ -139,7 +159,8 @@ export function useRoom() {
         getRoomMessages,
         deleteRoom,
         updateRoom,
-        getRoomById
+        getRoomById,
+        getRoomsByDegreeLevel
     }
 
 }

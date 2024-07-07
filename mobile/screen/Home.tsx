@@ -6,15 +6,19 @@ import { useLayoutEffect, useState } from 'react';
 import { useRoom } from '../hooks/useRoom';
 import { useToken } from '../hooks/useToken';
 import { useUser } from '../hooks/useUser';
+import RNPickerSelect from 'react-native-picker-select';
+import { DegreeLevel } from '../types/teacher.type';
+
 
 export function Home({navigation}: {navigation: any}) {
 
     const [ rooms, setRooms ] = useState<any[]>([])
 
     const [ canCreateRoom, setCanCreateRoom ] = useState(false);
+    const [ canFilterRooms, setCanFilterRooms ] = useState(false);
 
-    const { getRooms } = useRoom();
-    const { getToken, decodeToken, hasRoleInToken } = useToken();
+    const { getRooms, getRoomsByDegreeLevel } = useRoom();
+    const { getToken, decodeToken, hasRoleInToken, getUserType } = useToken();
     const { signOut } = useUser();
 
     function handleSignOut() {
@@ -52,14 +56,25 @@ export function Home({navigation}: {navigation: any}) {
         });
     }
 
+    async function handleFilterByDegreeLevel(degreeLevel: DegreeLevel) {
+        const roomsFiltered = await getRoomsByDegreeLevel(degreeLevel);
+        setRooms(roomsFiltered as any);
+    }
+
     async function checkCanCreateRoom() {
         const can = await hasRoleInToken('room.create');
         setCanCreateRoom(can);
     }
 
+    async function checkCanFilterRooms() {
+        const isStudent = await getUserType();
+        setCanFilterRooms(isStudent === 'STUDENT');
+    } 
+
     useLayoutEffect(() => {
         setHeaderOptions();
-        checkCanCreateRoom()
+        checkCanCreateRoom();
+        checkCanFilterRooms();
         loadRooms();
     }, [])
 
@@ -70,6 +85,21 @@ export function Home({navigation}: {navigation: any}) {
                     Salas
                 </Text>
                 <View style={{display: 'flex', flexDirection: 'row', gap: 14, alignItems: 'center'}}>
+                    {
+                        canFilterRooms && (
+                            <RNPickerSelect
+                                onValueChange={(itemValue: DegreeLevel) => handleFilterByDegreeLevel(itemValue)}
+                                items={[
+                                    { label: "Bacharel", value: "BACHELORS" },
+                                    { label: "Mestre", value: "MASTERS" },
+                                    { label: "Doutor", value: "PHD" },
+                                    { label: "Pós-Doutor", value: "POSTDOC" },
+                                ]}
+                                style={pickerSelectStyles}
+                                placeholder={{ label: "Filtrar por Grau de Formação", value: "" }}
+                            />
+                        )
+                    }
                     {
                         canCreateRoom && (
                             <TouchableOpacity
@@ -131,3 +161,26 @@ const styles = StyleSheet.create({
         height: 12,
     },
 });
+
+const pickerSelectStyles = StyleSheet.create({
+    inputIOS: {
+        fontSize: 16,
+        paddingVertical: 12,
+        paddingHorizontal: 10,
+        borderWidth: 1,
+        borderColor: 'gray',
+        borderRadius: 4,
+        color: 'black',
+        paddingRight: 30, 
+    },
+    inputAndroid: {
+        fontSize: 16,
+        paddingHorizontal: 10,
+        paddingVertical: 8,
+        borderWidth: 0.5,
+        borderColor: 'purple',
+        borderRadius: 8,
+        color: 'black',
+        paddingRight: 30, 
+    },
+  });

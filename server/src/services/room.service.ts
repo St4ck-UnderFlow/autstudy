@@ -1,6 +1,6 @@
 import { Room } from "@prisma/client";
 import { prisma } from "../../prisma/prisma";
-import { SupportLevel } from "../types/enums.enum";
+import { DegreeLevel, SupportLevel } from "../types/enums.enum";
 
 
 export class RoomService { 
@@ -64,6 +64,22 @@ export class RoomService {
         }
 
         return room;
+    };
+
+    async getByTeacherDegreelevel(degreeLevel: DegreeLevel) {
+        const rooms = await prisma.room.findMany({
+            where: {
+                teacher: {
+                    degreeLevel
+                }
+            }
+        })
+
+        if (!rooms) {
+            throw new Error('Rooms With This Degree Level Not Found')
+        }
+
+        return rooms;
     };
 
     async delete(id: string) {
