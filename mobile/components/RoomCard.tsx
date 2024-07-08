@@ -1,9 +1,11 @@
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { primaryColor } from "../styles/Global.style";
+import { SupportLevel } from "../types/student.type";
 
 interface RoomCardProps {
     id: string;
     title: string;
+    classSupportLevel: SupportLevel;
 }
 
 export function RoomCard(props: RoomCardProps) {
@@ -15,6 +17,15 @@ export function RoomCard(props: RoomCardProps) {
         const secondLetter = words.length > 1 ? words[1][0].toUpperCase() : '';
         const alias = (firstLetter + secondLetter).slice(0, 2);
         return alias;
+    }
+
+    function translateClassSupportLevel() {
+        const dict: any = {
+            SLIGHT: 'GRAU 1',
+            MODERATE: 'GRAU 2',
+            SEVERE: 'GRAU 3'
+        };
+        return dict[props.classSupportLevel]
     }
 
     return (
@@ -29,7 +40,7 @@ export function RoomCard(props: RoomCardProps) {
                     { props.title }
                 </Text>
                 <Text style={styles.headerDescription}>
-                    Participe agora
+                    { translateClassSupportLevel() }
                 </Text>
             </View>
         </View>

@@ -28,6 +28,7 @@ export function Home({navigation}: {navigation: any}) {
 
     async function loadRooms() {
         const allRooms = await getRooms();
+        console.log(allRooms);
         setRooms(allRooms);
     }
 
@@ -131,6 +132,7 @@ export function Home({navigation}: {navigation: any}) {
                                 <RoomCard 
                                     title={item.title} 
                                     id={item.id} 
+                                    classSupportLevel={item.classSupportLevel}
                                 />
                             </TouchableOpacity>
                         )
