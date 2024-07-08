@@ -69,4 +69,13 @@ export class TeacherService {
         return teacherUpdated;
     };
 
+    async getByUserId(userId: string) {
+        const teacher = await prisma.teacher.findUnique({
+            where: {
+                userId
+            }
+        });
+        return teacher;
+    }
+
 }

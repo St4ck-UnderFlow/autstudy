@@ -14,7 +14,8 @@ import { DegreeLevel } from "../types/enums.enum";
 
 const roomService = new RoomService();
 const jwtService = new JwtService();
-const studentService = new StudentService()
+const studentService = new StudentService();
+const teacherService = new TeacherService();
 
 export function RoomController(app: FastifyInstance, io: any) {
 
@@ -55,9 +56,19 @@ export function RoomController(app: FastifyInstance, io: any) {
         },
         async (request: FastifyRequest, reply: FastifyReply) => {
         try {
-            const rooms = await roomService.getAll();
+            const token = await jwtService.decode(request);
+            const userId = token.sub;
+
+            const teacher = await teacherService.getByUserId(userId);
+
+            if (!teacher) return;
+
+            const ownerId = teacher?.id;
+            const rooms = await roomService.getRoomsByOwnerId(ownerId);
+            
             return await reply.send(rooms);
         } catch (error) {
+            console.log(error)
             reply.status(404).send(error);
         }
     })

@@ -113,4 +113,25 @@ export class RoomService {
         return allMessages;
     }
 
+    async getRoomsByOwnerId(ownerId: string) {
+        const rooms = await prisma.room.findMany({
+            where: {
+                ownerId
+            },
+            orderBy: {
+                createdAt: 'desc'
+            },
+            include: {
+                students: true,
+                teacher: true
+            }
+        });
+
+        if (!rooms) {
+            throw new Error('No rooms found using this owner Id');
+        }
+
+        return rooms;
+    }
+
 }
