@@ -9,7 +9,7 @@ import { createRoomSchema, getRoomByIdSchema, updateRoomSchema } from "../securi
 import { prisma } from "../../prisma/prisma";
 import { StudentService } from "../services/students.service";
 import { TeacherService } from "../services/teacher.service";
-import { DegreeLevel } from "../types/enums.enum";
+import { DegreeLevel, SupportLevel } from "../types/enums.enum";
 
 
 const roomService = new RoomService();
@@ -65,7 +65,7 @@ export function RoomController(app: FastifyInstance, io: any) {
 
             const ownerId = teacher?.id;
             const rooms = await roomService.getRoomsByOwnerId(ownerId);
-            
+
             return await reply.send(rooms);
         } catch (error) {
             console.log(error)
@@ -110,9 +110,14 @@ export function RoomController(app: FastifyInstance, io: any) {
             try {
                 const { degreeLevel } = request.params as { degreeLevel: DegreeLevel };
 
-                const roomsByDegreeLevel = await roomService.getByTeacherDegreelevel(degreeLevel);
+                const tokenDecoded = await jwtService.decode(request);
+                const userId = tokenDecoded.sub;
 
-                reply.status(200).send(roomsByDegreeLevel);
+                const student = await studentService.getByUserId(userId);
+                const supportLevel = student.supportLevel as SupportLevel;
+
+                const rooms = await roomService.filter(degreeLevel, supportLevel);
+                reply.status(200).send(rooms);
             } catch (error) {
                 reply.status(404).send(error);
             }

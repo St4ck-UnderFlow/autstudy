@@ -66,12 +66,13 @@ export class RoomService {
         return room;
     };
 
-    async getByTeacherDegreelevel(degreeLevel: DegreeLevel) {
+    async filter(degreeLevel: DegreeLevel, classSupportLevel: SupportLevel) {
         const rooms = await prisma.room.findMany({
             where: {
                 teacher: {
                     degreeLevel
-                }
+                },
+                classSupportLevel
             }
         })
 
